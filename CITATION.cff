@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use Orihime/d2p, please cite the accompanying paper."
+title: "Orihime (d2p): Differentiable Dynamic Programming for PyTorch"
+type: software
+version: 0.1.0
+date-released: 2026-08-25
+authors:
+  - family-names: Mogilevsky
+    given-names: Casey Sumagaysay
+  - family-names: Liang
+    given-names: Kimberly
+repository-code: "https://github.com/megure-labs/orihime"
+license: Apache-2.0
+preferred-citation:
+  type: conference-paper
+  title: "d²p: Structured Soft Attention Is All You Need"
+  authors:
+    - family-names: Mogilevsky
+      given-names: Casey Sumagaysay
+    - family-names: Liang
+      given-names: Kimberly
+  collection-title: "Proceedings of the 43rd International Conference on Machine Learning"
+  year: 2026
+  url: "https://openreview.net/forum?id=ZPtK8LKcvi"
