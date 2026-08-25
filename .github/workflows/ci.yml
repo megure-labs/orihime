@@ -1,0 +1,145 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-tests:
+    name: Python ${{ matrix.python }} / PyTorch ${{ matrix.torch }} / CPU
+    if: github.repository == 'megure-labs/orihime'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: "3.10"
+            torch: "2.9"
+          - python: "3.11"
+            torch: "2.10"
+          - python: "3.12"
+            torch: "2.11"
+          - python: "3.13"
+            torch: "2.12"
+          - python: "3.14"
+            torch: "2.13"
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install the selected CPU PyTorch
+        run: >-
+          python -m pip install --no-cache-dir
+          "torch==${{ matrix.torch }}.*"
+          --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Build orihime against that PyTorch
+        env:
+          MAX_JOBS: "2"
+        run: |
+          python -m pip install --no-cache-dir meson-python meson ninja "numpy>=1.24" "pytest>=7" "tomli>=1.1.0; python_version < '3.11'"
+          python -m pip install --no-cache-dir --no-build-isolation --no-deps -e . \
+            --config-settings=setup-args=-Dcuda=disabled \
+            --config-settings=compile-args=-j2
+
+      - name: Validate source and public documentation
+        run: |
+          python -m compileall -q orihime tests
+          python -m pytest -q
+
+  release-source-policy:
+    name: Release source policy
+    if: github.repository == 'megure-labs/orihime'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Check version, private paths, and source hygiene
+        shell: bash
+        run: |
+          test "$(python - <<'PY'
+          import tomllib
+          with open('pyproject.toml', 'rb') as handle:
+              print(tomllib.load(handle)['project']['version'])
+          PY
+          )" = "0.1.0"
+          test ! -e .repo-surface
+          test ! -e docs/work
+          test ! -e logs
+          test ! -e config
+          test -f AGENTS.md
+          test -L CLAUDE.md
+          test -L GEMINI.md
+          test -L QWEN.md
+          test -f CONTRIBUTING.md
+          test -f PROVENANCE.md
+          test -f HIP_SOURCE_PROVENANCE.md
+          test -f NOTICE
+          test -f CHANGELOG.md
+          test -f SECURITY.md
+          test -f docs/compatibility.md
+          test "$(find src -type f \( -name '*.hip' -o -name '*.hiph' -o -name 'torch_hip.cpp' -o -name 'hip_utils.h' \) | wc -l)" -eq 40
+          python - <<'PY'
+          import subprocess
+
+          retired = (
+              ''.join(('d', '2p')),
+              ''.join(('D', '2P')),
+              ''.join(('p', 'f', 'align')),
+              ''.join(('PF', 'align')),
+              ''.join(('PF', 'ALIGN')),
+              ''.join(('ori', 'kata')),
+              ''.join(('Ori', 'kata')),
+          )
+          tracked = subprocess.check_output(
+              ['git', 'grep', '-I', '-n', '-e', '.'],
+              text=True,
+          )
+          problems = [
+              line for line in tracked.splitlines()
+              if any(term in line.partition(':')[2] for term in retired)
+          ]
+          if problems:
+              raise SystemExit('\n'.join(problems))
+          PY
+          python - <<'PY'
+          import hashlib
+          import pathlib
+          import re
+
+          manifest = pathlib.Path('HIP_SOURCE_PROVENANCE.md').read_text()
+          rows = re.findall(
+              r"\| `([^`]+)` \| `[0-9a-f]{64}` \| `([0-9a-f]{64})` \|",
+              manifest,
+          )
+          assert len(rows) == 40, len(rows)
+          for path_text, expected in rows:
+              path = pathlib.Path(path_text)
+              actual = hashlib.sha256(path.read_bytes()).hexdigest()
+              assert actual == expected, (path, expected, actual)
+          PY
+          git diff --check

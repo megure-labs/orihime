@@ -1,0 +1,43 @@
+option(
+  'cuda',
+  type : 'feature',
+  value : 'auto',
+  description : 'Build CUDA kernels and link against PyTorch CUDA libraries'
+)
+
+option(
+  'orihime_cuda_arch_mode',
+  type : 'combo',
+  choices : ['native', 'release-cu128', 'release-cu130', 'custom'],
+  value : 'native',
+  description : 'CUDA arch selection policy: narrow native source builds by default, explicit fatbin release profiles for wheel builds'
+)
+
+option(
+  'orihime_cuda_gencode',
+  type : 'string',
+  value : '',
+  description : 'Semicolon-separated NVCC gencode entries used when orihime_cuda_arch_mode=custom, for example arch=compute_80,code=sm_80;arch=compute_80,code=compute_80'
+)
+
+option(
+  'hip',
+  type : 'feature',
+  value : 'auto',
+  description : 'Build committed HIP kernels for AMD GPUs and link against PyTorch ROCm libraries. Mutually exclusive with cuda.'
+)
+
+option(
+  'orihime_hip_arch_mode',
+  type : 'combo',
+  choices : ['native', 'release-rocm7-rdna', 'custom'],
+  value : 'native',
+  description : 'HIP target selection policy: attached GPU, a ROCm 7 RDNA2-RDNA4 family fat binary, or explicit targets'
+)
+
+option(
+  'orihime_hip_targets',
+  type : 'string',
+  value : '',
+  description : 'Semicolon-separated hipcc targets used when orihime_hip_arch_mode=custom, for example gfx90a;gfx942'
+)
