@@ -44,6 +44,11 @@ papers, specifications, documentation, and test vectors.
   `LICENSE`, `NOTICE`, attribution, or provenance records.
 - Record every approved third-party code, dataset, model, fixture, or generated
   artifact in the relevant notice and provenance files.
+- Every proposed change must have a complete Kaname-compatible trace and one
+  new public record under `.provenance/changes/`, as specified by
+  `docs/provenance-policy.md`. Do not invent run ids, evidence, digests, review
+  results, or closure state. If Kaname evidence is unavailable, stop and report
+  that the change is not merge-ready.
 - Never commit credentials, private Kaname traces, internal task graphs,
   unrelated machine paths, or private checkout metadata.
 - Do not rewrite public history or force-push unless a maintainer explicitly
@@ -60,4 +65,7 @@ python -m pytest -q
 ```
 
 For native changes, also build from source as documented in
-`docs/source-build.md`. Run `git diff --check` before submitting.
+`docs/source-build.md`. Public CI validates CPU-only Linux x86-64 and Apple
+Silicon builds. CUDA and HIP execution is offline; record the applicable
+Megure-controlled GPU validation in the Kaname trace. Run `git diff --check`
+before submitting.

@@ -1,0 +1,45 @@
+name: Provenance policy
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: provenance-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  provenance-policy:
+    name: Provenance policy
+    if: >-
+      github.repository == 'megure-labs/orihime' &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      # pull_request_target is deliberate: the policy and validator come from
+      # the trusted base commit. Never execute or check out pull-request code in
+      # this job.
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Fetch the proposed Git objects without checking them out
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: >-
+          git fetch --no-tags --depth=100 origin
+          "pull/${PR_NUMBER}/head:refs/remotes/origin/provenance-head"
+
+      - name: Verify the required Kaname-compatible change record
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: >-
+          python tools/validate_change_provenance.py check
+          --base "${BASE_SHA}"
+          --head refs/remotes/origin/provenance-head

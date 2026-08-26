@@ -36,6 +36,14 @@ See [Building from source](source-build.md) for native, multi-family RDNA, and
 custom HIP target selection. Saigo–Vert linear and affine remain CPU/CUDA-only
 in `0.1.0`.
 
+## Continuous and offline validation
+
+Public GitHub CI builds and runs the complete CPU test suite on Linux x86-64
+and Apple Silicon. It does not claim GPU execution. NVIDIA CUDA and AMD HIP are
+validated offline on Megure-controlled hardware, and GPU-affecting pull
+requests must bind those results into their Kaname-compatible provenance
+record. See [Change provenance and merge policy](provenance-policy.md).
+
 ## Artifact identity
 
 For PyTorch 2.13/CUDA 13.0 on CPython 3.12, the planned wheel version is

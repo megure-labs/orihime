@@ -10,7 +10,11 @@ tool.
 2. Work on a focused branch and include tests for changed behavior.
 3. Follow the public contracts in the README and `docs/`.
 4. Run the relevant test subset, then the full suite when practical.
-5. Open a pull request using the repository template.
+5. Export a closed Kaname-compatible trace and add its public change record at
+   `.provenance/changes/<change-id>.json`.
+6. Validate the record against the exact pull-request base with
+   `python tools/validate_change_provenance.py check --base origin/main --head HEAD`.
+7. Open a pull request using the repository template.
 
 For a CPU source build:
 
@@ -23,6 +27,11 @@ python -m pytest -q
 
 See `docs/source-build.md` for CUDA, HIP, architecture-selection, and toolchain
 details.
+
+Public CI builds and runs the CPU-only extension on Linux x86-64 and Apple
+Silicon. CUDA and HIP validation is performed offline on Megure-controlled
+hardware; GPU-affecting changes must include those results in their retained
+trace and public validation summary.
 
 ## Clean-room and AI-assisted contributions
 
@@ -41,6 +50,12 @@ In the pull request, disclose:
 
 If external implementation source was viewed, say so before submitting code so
 the maintainers can decide whether a clean-room restart is needed.
+
+The complete provenance and approval contract is documented in
+[`docs/provenance-policy.md`](docs/provenance-policy.md). A pull request without
+one new valid, content-bound change record is mechanically ineligible to merge.
+If you do not have Kaname access, open the pull request as a draft and ask a
+maintainer to run the integration through Kaname before marking it ready.
 
 ## License
 

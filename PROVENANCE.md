@@ -20,3 +20,16 @@ the applicable GitHub release.
 
 The imported HIP backend has an additional file-by-file source and transformed
 checksum record in [HIP_SOURCE_PROVENANCE.md](HIP_SOURCE_PROVENANCE.md).
+
+## Provenance for future changes
+
+Every post-release pull request must carry a content-bound public change record
+and a complete retained Kaname-compatible trace. The required trace contents,
+clean-room treatment, automated checks, and human approval gate are normative
+in [Change provenance and merge policy](docs/provenance-policy.md).
+
+The public record commits to the private trace with SHA-256 digests; it does
+not publish transcripts or sensitive machine metadata. GitHub validates the
+record's structure and exact patch binding. A code owner separately verifies
+the committed digests against Kaname's access-controlled ledger before
+approval.
