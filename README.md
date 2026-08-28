@@ -99,9 +99,10 @@ assert value.shape == entropy.shape == (2,)
 assert pair_scores.grad is not None
 ```
 
-The map has the same shape as the primary input. CKY is the exception: its
-merge map matches `merge_scores`, while
-`ohm.cky_leaf_map(...)` returns a detached leaf-derivative view.
+For most algorithms, the structured attention map has the same shape as the
+primary input. CKY is different. Its merge map has the same shape as
+`merge_scores`, and `ohm.cky_leaf_map(...)` returns a detached view of the leaf
+derivatives.
 
 ## Algorithm guides
 
@@ -153,11 +154,12 @@ batches, transforms, modules, masks, and cotangents.
   parameters; `sensitivity` returns full map derivatives with respect to
   scalar parameters.
 
-Pass one field or a sequence of fields to `output=`. For `forward`, omitting
-`output` returns the three standard observables—`map`, `value`, and `entropy`—in
-a name-keyed dictionary. Algorithm-specific statistics are derived from value
-gradients rather than added to this default result. Native dispatcher bindings
-and compatibility adapters are implementation details.
+Use `output=` to request one field or a sequence of fields. For `forward`, omit
+`output` to return all three standard observables: `map`, `value`, and
+`entropy`. The result is a dictionary keyed by name. Algorithm-specific
+statistics are derived from value gradients rather than added to this default
+result. Native dispatcher bindings and compatibility adapters are
+implementation details.
 
 ## Citation
 
@@ -180,10 +182,10 @@ use Orihime in your research, please cite it:
 
 ## Contributing and provenance
 
-Admission is actor-neutral: human-written and agent-written changes are subject
-to identical provenance, clean-room, licensing, validation, and admission
-requirements; maintainer authority can authorize work but does not exempt it
-from those requirements.
+Admission is actor-neutral. Human-written and agent-written changes are subject
+to the same provenance, clean-room, licensing, validation, and admission
+requirements. Maintainer authority can authorize work, but it does not exempt a
+change from those requirements.
 
 External contributions are temporarily closed until Megure Labs deploys the
 Kaname verifier. Forking and downstream modification remain permitted under
