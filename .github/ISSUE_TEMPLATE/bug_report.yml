@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a reproducible defect in Orihime/orihime.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Include the smallest reproducible example you can share.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Python, PyTorch, CUDA, and Orihime/orihime versions.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or traceback
+      render: shell
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Security check
+      options:
+        - label: This is not a security vulnerability; I will use the private reporting flow for security issues.
+          required: true

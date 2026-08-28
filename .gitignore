@@ -1,0 +1,26 @@
+# Build directories
+builddir/
+build/
+
+# Compiled extension
+orihime/_C*.so
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+*.egg
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+._*
+Thumbs.db

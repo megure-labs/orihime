@@ -1,0 +1,70 @@
+[build-system]
+# Build dependencies - only needed when building from source, not when installing wheels
+requires = [
+    "meson-python>=0.15.0",
+    "meson>=1.2.0",
+    "ninja",
+    "torch>=2.5",  # register_vmap/register_fake are required at import time
+]
+build-backend = "mesonpy"
+
+[project]
+name = "orihime"
+version = "0.1.0"
+description = "Differentiable Dynamic Programming operators for PyTorch on CPU, CUDA, and HIP"
+readme = "README.md"
+authors = [{ name = "Casey Mogilevsky" }]
+license = "Apache-2.0"
+# Ship the license text and the attribution NOTICE inside built artifacts, not
+# just as metadata. Apache-2.0 requires recipients get a copy of the License
+# (4a) and that the NOTICE attributions are retained (4d); a `License:` header
+# alone satisfies neither. Without this the wheels contained no license text at
+# all.
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.10"
+keywords = ["pytorch", "dynamic-programming", "differentiable", "cpu", "cuda", "hip", "rocm", "amd", "alignment", "parsing"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: C++",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "torch>=2.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "numpy>=1.24",
+    "pytest>=7.0.0",
+    "pytest-xdist",
+    "tomli>=1.1.0; python_version < '3.11'",
+]
+
+[project.urls]
+Homepage = "https://github.com/megure-labs/orihime"
+Repository = "https://github.com/megure-labs/orihime"
+Issues = "https://github.com/megure-labs/orihime/issues"
+
+[tool.meson-python.args]
+# CPU-only source builds use:
+# python -m pip install . --no-build-isolation --config-settings=setup-args=-Dcuda=disabled
+setup = ["-Dbuildtype=release"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+strict_markers = true
+markers = [
+    "multi_gpu: requires at least two real CUDA devices",
+]

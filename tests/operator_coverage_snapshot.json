@@ -1,0 +1,1107 @@
+{
+  "schema_version": 2,
+  "operators": [
+    "sw",
+    "sw_affine",
+    "sv_linear",
+    "sv_affine",
+    "nw",
+    "nw_affine",
+    "dtw",
+    "lcs",
+    "lev",
+    "osa",
+    "damerau",
+    "mas",
+    "cky",
+    "eisner"
+  ],
+  "scenario_ids": [
+    "PUB-01",
+    "PUB-02",
+    "RAW-01",
+    "NN-01",
+    "AUT-01",
+    "TRN-01",
+    "TRN-02",
+    "TRN-03",
+    "TRN-04",
+    "CMP-01",
+    "CMP-02",
+    "VAL-01",
+    "VAL-02",
+    "RAW-02",
+    "VAL-03",
+    "MASK-01",
+    "MASK-02",
+    "MASK-03",
+    "ACC-01",
+    "ACC-02",
+    "ACC-03",
+    "ACC-04",
+    "ACC-05",
+    "NUM-01",
+    "NUM-02",
+    "NUM-03",
+    "NUM-04",
+    "NUM-05",
+    "LEN-01",
+    "LEN-02",
+    "EDGE-01",
+    "GUARD-01",
+    "GUARD-02",
+    "THREAD-01",
+    "BACK-01",
+    "BACK-02",
+    "OVER-01",
+    "OVER-02",
+    "PRUNE-01",
+    "DEVICE-01",
+    "DEVICE-02",
+    "DEVICE-03",
+    "FAM-01",
+    "FAM-02",
+    "FAM-03",
+    "FAM-04",
+    "FAM-05",
+    "FAM-06"
+  ],
+  "scenarios": [
+    {
+      "id": "PUB-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "PUB-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "RAW-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "NN-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "AUT-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "TRN-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "TRN-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "TRN-03",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "TRN-04",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "CMP-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "CMP-02",
+      "coverage": {
+        "accepted-representative": {
+          "sw": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "sv_linear": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "sw_affine": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "sv_affine": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "nw": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "nw_affine": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "dtw": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "lcs": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "lev": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "osa": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "damerau": "MAS is the named representative for dynamic rectangular feasibility-length compilation.",
+          "eisner": "MAS is the named representative for dynamic rectangular feasibility-length compilation."
+        },
+        "covered": [
+          "mas"
+        ],
+        "not-applicable": {
+          "cky": "CKY has no lengths argument; its cubic chart and leaf scores define the complete recurrence."
+        }
+      }
+    },
+    {
+      "id": "VAL-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "VAL-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "eisner"
+        ],
+        "not-applicable": {
+          "cky": "CKY has no lengths argument; chart dimensions define the complete recurrence."
+        }
+      }
+    },
+    {
+      "id": "RAW-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "VAL-03",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "MASK-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "MASK-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "MASK-03",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "dtw"
+        ],
+        "accepted-representative": {
+          "sw_affine": "SW and DTW are the named fullgraph mask representatives.",
+          "sv_affine": "SW and DTW are the named fullgraph mask representatives.",
+          "nw": "SW and DTW are the named fullgraph mask representatives.",
+          "nw_affine": "SW and DTW are the named fullgraph mask representatives.",
+          "lcs": "SW and DTW are the named fullgraph mask representatives.",
+          "lev": "DTW is the named cost-native fullgraph mask representative.",
+          "osa": "DTW is the named cost-native fullgraph mask representative.",
+          "damerau": "DTW is the named cost-native fullgraph mask representative.",
+          "mas": "SW and DTW are the named fullgraph mask representatives.",
+          "cky": "SW and DTW are the named fullgraph mask representatives.",
+          "eisner": "SW and DTW are the named fullgraph mask representatives."
+        }
+      }
+    },
+    {
+      "id": "ACC-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "ACC-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "ACC-03",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "ACC-04",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine"
+        ],
+        "accepted-representative": {
+          "nw": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "nw_affine": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "dtw": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "lcs": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "lev": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "osa": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "damerau": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "mas": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "cky": "The named low-level autocast smoke is intentionally represented by SW and SW-affine.",
+          "eisner": "The named low-level autocast smoke is intentionally represented by SW and SW-affine."
+        }
+      }
+    },
+    {
+      "id": "ACC-05",
+      "coverage": {
+        "accepted-representative": {
+          "sw": "MAS owns the operator-specific contracted raw-backward autocast case; SW remains covered by the shared autocast matrix.",
+          "sv_linear": "MAS owns the operator-specific contracted raw-backward autocast case; Saigo–Vert linear remains covered by the shared autocast matrix.",
+          "sw_affine": "MAS owns the operator-specific contracted raw-backward autocast case; SW-affine remains covered by the shared autocast matrix.",
+          "sv_affine": "MAS owns the operator-specific contracted raw-backward autocast case; Saigo–Vert affine remains covered by the shared autocast matrix.",
+          "nw": "MAS owns the operator-specific contracted raw-backward autocast case; NW remains covered by the shared autocast matrix.",
+          "nw_affine": "MAS owns the operator-specific contracted raw-backward autocast case; NW-affine remains covered by the shared autocast matrix.",
+          "dtw": "MAS owns the operator-specific contracted raw-backward autocast case; DTW remains covered by the shared autocast matrix.",
+          "lcs": "MAS owns the operator-specific contracted raw-backward autocast case; LCS remains covered by the shared autocast matrix.",
+          "lev": "MAS owns the operator-specific contracted raw-backward autocast case; Levenshtein remains covered by the shared autocast matrix.",
+          "osa": "MAS owns the operator-specific contracted raw-backward autocast case; OSA remains covered by the shared autocast matrix.",
+          "damerau": "MAS owns the operator-specific contracted raw-backward autocast case; Damerau remains covered by the shared autocast matrix.",
+          "cky": "MAS owns the operator-specific contracted raw-backward autocast case; CKY remains covered by the shared autocast matrix.",
+          "eisner": "MAS owns the operator-specific contracted raw-backward autocast case; Eisner remains covered by the shared autocast matrix."
+        },
+        "covered": [
+          "mas"
+        ]
+      }
+    },
+    {
+      "id": "NUM-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "NUM-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "NUM-03",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "NUM-04",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "NUM-05",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "LEN-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "eisner"
+        ],
+        "not-applicable": {
+          "cky": "CKY has no variable-length argument."
+        }
+      }
+    },
+    {
+      "id": "LEN-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "eisner"
+        ],
+        "not-applicable": {
+          "cky": "CKY has no padded lengths region."
+        }
+      }
+    },
+    {
+      "id": "EDGE-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "GUARD-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "GUARD-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "THREAD-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "BACK-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "BACK-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "OVER-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "OVER-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "PRUNE-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "DEVICE-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "DEVICE-02",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "DEVICE-03",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "sw_affine",
+          "sv_affine",
+          "nw",
+          "nw_affine",
+          "dtw",
+          "lcs",
+          "lev",
+          "osa",
+          "damerau",
+          "mas",
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "FAM-01",
+      "coverage": {
+        "covered": [
+          "sw",
+          "sv_linear",
+          "nw"
+        ],
+        "not-applicable": {
+          "sw_affine": "Affine SW has no linear-gap-only boundary contract.",
+          "sv_affine": "Affine Saigo–Vert has no linear-gap-only boundary contract.",
+          "nw_affine": "Affine NW has no linear-gap-only boundary contract.",
+          "dtw": "DTW has no linear-alignment gap parameter.",
+          "lcs": "LCS has no linear-alignment gap parameter.",
+          "lev": "Edit-distance costs are not linear-alignment gap scores.",
+          "osa": "Edit-distance costs are not linear-alignment gap scores.",
+          "damerau": "Edit-distance costs are not linear-alignment gap scores.",
+          "mas": "MAS has no linear alignment gap transition.",
+          "cky": "CKY has chart merge transitions, not linear alignment gaps.",
+          "eisner": "Eisner has dependency arcs, not linear alignment gaps."
+        }
+      }
+    },
+    {
+      "id": "FAM-02",
+      "coverage": {
+        "not-applicable": {
+          "sw": "Linear SW has no affine gap-open/extend state.",
+          "sv_linear": "Linear Saigo–Vert has no affine gap-open/extend state.",
+          "nw": "Linear NW has no affine gap-open/extend state.",
+          "dtw": "DTW has no affine gap state.",
+          "lcs": "LCS has no affine gap state.",
+          "lev": "Edit-distance costs are not affine gap states.",
+          "osa": "Edit-distance costs are not affine gap states.",
+          "damerau": "Edit-distance costs are not affine gap states.",
+          "mas": "MAS has no affine gap state.",
+          "cky": "CKY has chart merge transitions, not affine gaps.",
+          "eisner": "Eisner has dependency arcs, not affine gaps."
+        },
+        "covered": [
+          "sw_affine",
+          "sv_affine",
+          "nw_affine"
+        ]
+      }
+    },
+    {
+      "id": "FAM-03",
+      "coverage": {
+        "not-applicable": {
+          "sw": "SW has no DTW bandwidth constraint.",
+          "sv_linear": "Saigo–Vert linear has no DTW bandwidth constraint.",
+          "sw_affine": "SW-affine has no DTW bandwidth constraint.",
+          "sv_affine": "Saigo–Vert affine has no DTW bandwidth constraint.",
+          "nw": "NW has no DTW bandwidth constraint.",
+          "nw_affine": "NW-affine has no DTW bandwidth constraint.",
+          "lcs": "LCS has no bandwidth keyword or equivalent recurrence constraint.",
+          "lev": "Levenshtein has no bandwidth API.",
+          "osa": "OSA has no bandwidth API.",
+          "damerau": "Damerau has no bandwidth API.",
+          "mas": "MAS has monotonic rectangular topology, not a DTW bandwidth option.",
+          "cky": "CKY has no bandwidth API.",
+          "eisner": "Eisner has no bandwidth API."
+        },
+        "covered": [
+          "dtw"
+        ]
+      }
+    },
+    {
+      "id": "FAM-04",
+      "coverage": {
+        "not-applicable": {
+          "sw": "SW is score-native alignment, not edit distance.",
+          "sv_linear": "Saigo–Vert linear is score-native alignment, not edit distance.",
+          "sw_affine": "SW-affine is score-native alignment, not edit distance.",
+          "sv_affine": "Saigo–Vert affine is score-native alignment, not edit distance.",
+          "nw": "NW is score-native alignment, not edit distance.",
+          "nw_affine": "NW-affine is score-native alignment, not edit distance.",
+          "dtw": "DTW is path-cost alignment, not edit distance.",
+          "lcs": "LCS is match-score recurrence, not edit distance.",
+          "mas": "MAS is monotonic alignment, not edit distance.",
+          "cky": "CKY is a cubic chart recurrence, not edit distance.",
+          "eisner": "Eisner is projective dependency parsing, not edit distance."
+        },
+        "covered": [
+          "lev",
+          "osa",
+          "damerau"
+        ]
+      }
+    },
+    {
+      "id": "FAM-05",
+      "coverage": {
+        "not-applicable": {
+          "sw": "SW is not a chart parser.",
+          "sv_linear": "Saigo–Vert linear is not a chart parser.",
+          "sw_affine": "SW-affine is not a chart parser.",
+          "sv_affine": "Saigo–Vert affine is not a chart parser.",
+          "nw": "NW is not a chart parser.",
+          "nw_affine": "NW-affine is not a chart parser.",
+          "dtw": "DTW is not a chart parser.",
+          "lcs": "LCS is not a chart parser.",
+          "lev": "Levenshtein is not a chart parser.",
+          "osa": "OSA is not a chart parser.",
+          "damerau": "Damerau is not a chart parser.",
+          "mas": "MAS is monotonic alignment, not a chart parser."
+        },
+        "covered": [
+          "cky",
+          "eisner"
+        ]
+      }
+    },
+    {
+      "id": "FAM-06",
+      "coverage": {
+        "not-applicable": {
+          "sw": "SW has no MAS monotonic rectangular topology.",
+          "sv_linear": "Saigo–Vert linear has no MAS monotonic rectangular topology.",
+          "sw_affine": "SW-affine has no MAS monotonic rectangular topology.",
+          "sv_affine": "Saigo–Vert affine has no MAS monotonic rectangular topology.",
+          "nw": "NW has no MAS monotonic rectangular topology.",
+          "nw_affine": "NW-affine has no MAS monotonic rectangular topology.",
+          "dtw": "DTW has a distinct path topology, not MAS monotonic rectangular feasibility.",
+          "lcs": "LCS has a distinct match-only recurrence, not MAS topology.",
+          "lev": "Levenshtein is edit distance, not MAS.",
+          "osa": "OSA is edit distance, not MAS.",
+          "damerau": "Damerau is edit distance, not MAS.",
+          "cky": "CKY has cubic chart topology, not MAS topology.",
+          "eisner": "Eisner has projective dependency topology, not MAS topology."
+        },
+        "covered": [
+          "mas"
+        ]
+      }
+    }
+  ]
+}

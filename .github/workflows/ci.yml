@@ -1,0 +1,174 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-tests:
+    name: Python ${{ matrix.python }} / PyTorch ${{ matrix.torch }} / CPU
+    if: github.repository == 'megure-labs/orihime'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python: "3.10"
+            torch: "2.9"
+          - python: "3.11"
+            torch: "2.10"
+          - python: "3.12"
+            torch: "2.11"
+          - python: "3.13"
+            torch: "2.12"
+          - python: "3.14"
+            torch: "2.13"
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Install the selected CPU PyTorch
+        run: >-
+          python -m pip install --no-cache-dir
+          "torch==${{ matrix.torch }}.*"
+          --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Build orihime against that PyTorch
+        env:
+          MAX_JOBS: "2"
+        run: |
+          python -m pip install --no-cache-dir meson-python meson ninja "numpy>=1.24" "pytest>=7" "tomli>=1.1.0; python_version < '3.11'"
+          python -m pip install --no-cache-dir --no-build-isolation --no-deps -e . \
+            --config-settings=setup-args=-Dcuda=disabled \
+            --config-settings=setup-args=-Dhip=disabled \
+            --config-settings=compile-args=-j2
+
+      - name: Validate source and public documentation
+        run: |
+          python -m compileall -q orihime tests
+          python -m pytest -q
+
+  apple-silicon-cpu:
+    name: Apple Silicon / Python 3.13 / PyTorch 2.12 / CPU
+    if: github.repository == 'megure-labs/orihime'
+    runs-on: macos-14
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Confirm the hosted runner is Apple Silicon
+        run: test "$(uname -m)" = "arm64"
+
+      - name: Install PyTorch for macOS arm64
+        run: python -m pip install --no-cache-dir "torch==2.12.*"
+
+      - name: Build the CPU-only extension
+        env:
+          MAX_JOBS: "3"
+        run: |
+          python -m pip install --no-cache-dir meson-python meson ninja "numpy>=1.24" "pytest>=7"
+          python -m pip install --no-cache-dir --no-build-isolation --no-deps -e . \
+            --config-settings=setup-args=-Dcuda=disabled \
+            --config-settings=setup-args=-Dhip=disabled \
+            --config-settings=compile-args=-j3
+
+      - name: Validate the Apple Silicon CPU build
+        run: |
+          python -m compileall -q orihime tests
+          python -m pytest -q
+
+  release-source-policy:
+    name: Release source policy
+    if: github.repository == 'megure-labs/orihime'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Check version, private paths, and source hygiene
+        shell: bash
+        run: |
+          test "$(python - <<'PY'
+          import tomllib
+          with open('pyproject.toml', 'rb') as handle:
+              print(tomllib.load(handle)['project']['version'])
+          PY
+          )" = "0.1.0"
+          test ! -e .repo-surface
+          test ! -e docs/work
+          test ! -e logs
+          test ! -e config
+          test -f AGENTS.md
+          test -L CLAUDE.md
+          test -f CONTRIBUTING.md
+          test -f PROVENANCE.md
+          test -z "$(find . -maxdepth 1 -type f -name '*_SOURCE_PROVENANCE.md' -print)"
+          test -f NOTICE
+          test -f CHANGELOG.md
+          test -f SECURITY.md
+          test -f docs/compatibility.md
+          test -f docs/provenance-policy.md
+          test -f .provenance/change-provenance.schema.json
+          test -f tools/validate_change_provenance.py
+          python tools/validate_change_provenance.py --help >/dev/null
+          test "$(find src -type f \( -name '*.hip' -o -name '*.hiph' -o -name 'torch_hip.cpp' -o -name 'hip_utils.h' \) | wc -l)" -eq 46
+          test "$(find src -type f -name 'kernels_gpu.cu' | wc -l)" -eq 14
+          test "$(find src -type f -name 'kernels_gpu.cuh' | wc -l)" -eq 14
+          test "$(find src -type f -name 'kernels_gpu.hip' | wc -l)" -eq 14
+          test "$(find src -type f -name 'kernels_gpu.hiph' | wc -l)" -eq 14
+          test -z "$(find src -type f \( -name 'kernels.cu' -o -name 'kernels.cuh' -o -name 'kernels.hip' -o -name 'kernels.hiph' \) -print)"
+          ! grep -R -n -F 'automatically generated by hipify' src
+          python - <<'PY'
+          import subprocess
+
+          retired = (
+              ''.join(('d', '2p')),
+              ''.join(('D', '2P')),
+              ''.join(('p', 'f', 'align')),
+              ''.join(('PF', 'align')),
+              ''.join(('PF', 'ALIGN')),
+              ''.join(('ori', 'kata')),
+              ''.join(('Ori', 'kata')),
+          )
+          tracked = subprocess.check_output(
+              ['git', 'grep', '-I', '-n', '-e', '.'],
+              text=True,
+          )
+          problems = [
+              line for line in tracked.splitlines()
+              if any(term in line.partition(':')[2] for term in retired)
+          ]
+          if problems:
+              raise SystemExit('\n'.join(problems))
+          PY
+          git diff --check

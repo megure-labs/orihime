@@ -1,0 +1,47 @@
+name: External contributions closed
+
+on:
+  pull_request_target:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: external-contribution-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  close-external-pull-request:
+    name: Close external pull request
+    if: >-
+      github.repository == 'megure-labs/orihime' &&
+      github.event.pull_request.author_association != 'OWNER' &&
+      github.event.pull_request.author_association != 'MEMBER'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      # This trusted-base workflow never checks out or executes pull-request
+      # content. It only comments on and closes the pull request through GitHub's
+      # API.
+      - name: Explain the temporary policy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh api --method POST \
+            "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --field body='Megure Labs is temporarily not accepting external upstream contributions while the production Kaname verifier is being built and deployed. Forking and downstream modification remain permitted under Apache-2.0. Please see CONTRIBUTING.md.'
+
+      - name: Close the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh api --method PATCH \
+            "repos/${REPOSITORY}/pulls/${PR_NUMBER}" \
+            --field state=closed

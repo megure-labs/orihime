@@ -1,0 +1,70 @@
+name: Provenance policy
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: provenance-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  provenance-policy:
+    name: Provenance policy
+    if: >-
+      github.repository == 'megure-labs/orihime' &&
+      github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Enforce temporary internal-only contribution policy
+        env:
+          AUTHOR_ASSOCIATION: ${{ github.event.pull_request.author_association }}
+        run: |
+          case "${AUTHOR_ASSOCIATION}" in
+            OWNER|MEMBER)
+              ;;
+            *)
+              echo "::error::External contributions are temporarily closed until the production Kaname verifier is deployed."
+              exit 1
+              ;;
+          esac
+
+      # pull_request_target is deliberate: the policy and validator come from
+      # the trusted base commit. Never execute or check out pull-request code in
+      # this job.
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Determine the forward-only enforcement state
+        id: enforcement
+        run: |
+          if test -f .provenance/KANAME_ENFORCEMENT_BASE; then
+            echo "active=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "active=false" >> "${GITHUB_OUTPUT}"
+            echo "Pre-verifier bootstrap: no Kaname provenance is claimed or required."
+          fi
+
+      - name: Fetch the proposed Git objects without checking them out
+        if: steps.enforcement.outputs.active == 'true'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: >-
+          git fetch --no-tags --depth=100 origin
+          "pull/${PR_NUMBER}/head:refs/remotes/origin/provenance-head"
+
+      - name: Verify the required Kaname-compatible change record
+        if: steps.enforcement.outputs.active == 'true'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: >-
+          python tools/validate_change_provenance.py check
+          --base "${BASE_SHA}"
+          --head refs/remotes/origin/provenance-head
