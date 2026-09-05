@@ -18,6 +18,7 @@ src/
 │   ├── softmax.hiph         # HIP softmax primitives
 │   ├── reduce.cuh           # CUDA reduction primitives
 │   ├── reduce.hiph          # HIP reduction primitives
+│   ├── wavefront.hiph       # Native HIP wave32/wave64 properties
 │   ├── torch_utils.h        # PyTorch tensor validation macros
 │   ├── cuda_utils.h         # CUDA error checking, stream utilities
 │   └── hip_utils.h          # HIP error checking, stream utilities

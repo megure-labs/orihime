@@ -2,7 +2,8 @@
 // reduce.hiph - HIP wavefront and block reduction primitives
 //
 // Shared across all orihime HIP operators. Float32 only.
-// All kernels using these reductions MUST have blockDim.x be a multiple of 32.
+// All kernels using these reductions MUST have blockDim.x be a multiple of the
+// active wavefront size (32 on RDNA, 64 on CDNA).
 //
 // Usage:
 //   #include "common/reduce.hiph"
@@ -11,63 +12,70 @@
 #pragma once
 #include <hip/hip_runtime.h>
 #include "numerics.hiph"
+#include "wavefront.hiph"
 
 namespace orihime {
 namespace common {
 
-inline constexpr int WARP_SIZE = 32;
-
 // ============================================================================
-// IMPORTANT: All kernels must use block sizes that are multiples of WARP_SIZE.
+// IMPORTANT: All kernels must use block sizes that are valid for wave32 and
+// wave64 when the same source is compiled for both RDNA and CDNA.
 // Use ORIHIME_STATIC_CHECK_BLOCK_SIZE for compile-time validation of constexpr sizes.
 // Use ORIHIME_CHECK_BLOCK_SIZE (in torch_utils.h) for runtime validation.
 // ============================================================================
 
 #define ORIHIME_STATIC_CHECK_BLOCK_SIZE(block_dim) \
-    static_assert(block_dim % 32 == 0, "Block size must be multiple of warp size")
+    static_assert( \
+        block_dim % PORTABLE_WAVEFRONT_MULTIPLE == 0, \
+        "Block size must be valid for wave32 and wave64" \
+    )
 
 // ============================================================================
 // Warp-level reductions (float-only, require full warps)
-// These use __shfl_down_sync with full warp mask (0xffffffff)
+// These use a 64-bit full mask; HIP trims it for wave32 targets.
 // ============================================================================
 
 __device__ __forceinline__
 float warp_reduce_sum(float v) {
+    const int wave_size = wavefront_size();
     #pragma unroll
-    for (int offset = WARP_SIZE / 2; offset > 0; offset >>= 1) {
-        v += __shfl_down_sync(0xffffffffffffffffULL, v, offset);
+    for (int offset = wave_size / 2; offset > 0; offset >>= 1) {
+        v += __shfl_down_sync(FULL_WAVE_MASK, v, offset, wave_size);
     }
     return v;
 }
 
 __device__ __forceinline__
 float warp_reduce_max(float v) {
+    const int wave_size = wavefront_size();
     #pragma unroll
-    for (int offset = WARP_SIZE / 2; offset > 0; offset >>= 1) {
-        v = fmaxf(v, __shfl_down_sync(0xffffffffffffffffULL, v, offset));
+    for (int offset = wave_size / 2; offset > 0; offset >>= 1) {
+        v = fmaxf(v, __shfl_down_sync(FULL_WAVE_MASK, v, offset, wave_size));
     }
     return v;
 }
 
 __device__ __forceinline__
 float warp_reduce_min(float v) {
+    const int wave_size = wavefront_size();
     #pragma unroll
-    for (int offset = WARP_SIZE / 2; offset > 0; offset >>= 1) {
-        v = fminf(v, __shfl_down_sync(0xffffffffffffffffULL, v, offset));
+    for (int offset = wave_size / 2; offset > 0; offset >>= 1) {
+        v = fminf(v, __shfl_down_sync(FULL_WAVE_MASK, v, offset, wave_size));
     }
     return v;
 }
 
 // ============================================================================
-// Block-level reductions (float-only, require blockDim.x % 32 == 0)
+// Block-level reductions (float-only, require complete native wavefronts)
 // Use shared memory to combine warp results
 // ============================================================================
 
 __device__ __forceinline__
 float block_reduce_sum(float v) {
-    __shared__ float shared[32];
-    int lane = threadIdx.x % WARP_SIZE;
-    int wid = threadIdx.x / WARP_SIZE;
+    __shared__ float shared[MAX_WAVEFRONTS_PER_BLOCK];
+    const int wave_size = wavefront_size();
+    int lane = threadIdx.x % wave_size;
+    int wid = threadIdx.x / wave_size;
 
     // First reduce within warps
     v = warp_reduce_sum(v);
@@ -77,7 +85,7 @@ float block_reduce_sum(float v) {
     __syncthreads();
 
     // First warp reduces all warp values
-    int num_warps = blockDim.x / WARP_SIZE;
+    int num_warps = blockDim.x / wave_size;
     v = (threadIdx.x < num_warps) ? shared[lane] : 0.0f;
     if (wid == 0) v = warp_reduce_sum(v);
 
@@ -92,15 +100,16 @@ float block_reduce_sum(float v) {
 
 __device__ __forceinline__
 float block_reduce_max(float v) {
-    __shared__ float shared[32];
-    int lane = threadIdx.x % WARP_SIZE;
-    int wid = threadIdx.x / WARP_SIZE;
+    __shared__ float shared[MAX_WAVEFRONTS_PER_BLOCK];
+    const int wave_size = wavefront_size();
+    int lane = threadIdx.x % wave_size;
+    int wid = threadIdx.x / wave_size;
 
     v = warp_reduce_max(v);
     if (lane == 0) shared[wid] = v;
     __syncthreads();
 
-    int num_warps = blockDim.x / WARP_SIZE;
+    int num_warps = blockDim.x / wave_size;
     v = (threadIdx.x < num_warps) ? shared[lane] : NINF;
     if (wid == 0) v = warp_reduce_max(v);
 
@@ -109,15 +118,16 @@ float block_reduce_max(float v) {
 
 __device__ __forceinline__
 float block_reduce_min(float v) {
-    __shared__ float shared[32];
-    int lane = threadIdx.x % WARP_SIZE;
-    int wid = threadIdx.x / WARP_SIZE;
+    __shared__ float shared[MAX_WAVEFRONTS_PER_BLOCK];
+    const int wave_size = wavefront_size();
+    int lane = threadIdx.x % wave_size;
+    int wid = threadIdx.x / wave_size;
 
     v = warp_reduce_min(v);
     if (lane == 0) shared[wid] = v;
     __syncthreads();
 
-    int num_warps = blockDim.x / WARP_SIZE;
+    int num_warps = blockDim.x / wave_size;
     v = (threadIdx.x < num_warps) ? shared[lane] : PINF;
     if (wid == 0) v = warp_reduce_min(v);
 

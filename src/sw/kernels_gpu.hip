@@ -25,6 +25,7 @@
 #include "common/hip_utils.h"
 #include "common/numerics.hiph"
 #include "common/reduce.hiph"
+#include "common/wavefront.hiph"
 
 using namespace orihime::common;
 
@@ -34,7 +35,7 @@ enum ParamType {
     PARAM_TEMPERATURE = 1
 };
 
-constexpr int SW_WARP_SIZE = 32;
+#define SW_WARP_SIZE wavefront_size()
 constexpr int SW_WARPS_PER_BLOCK = 8;
 
 namespace {
@@ -278,7 +279,7 @@ __global__ void sw_regular_forward_warp_kernel(
         local_max = fmaxf(local_max, a[idx]);
     }
     float max_val = warp_reduce_max(local_max);
-    max_val = __shfl_sync(0xffffffffffffffffULL, max_val, 0);
+    max_val = __shfl_sync(FULL_WAVE_MASK, max_val, 0, SW_WARP_SIZE);
 
     if (max_val <= NINF) {
         if (lane == 0) {
@@ -1185,7 +1186,7 @@ extern "C" void sw_regular_forward_warp_hip(
     int B, int max_L1, int max_L2,
     float gap, float T
 ) {
-    int threads = SW_WARPS_PER_BLOCK * SW_WARP_SIZE;
+    int threads = SW_WARPS_PER_BLOCK * get_current_device_wavefront_size();
     int blocks = (B + SW_WARPS_PER_BLOCK - 1) / SW_WARPS_PER_BLOCK;
     hipStream_t stream = orihime::common::get_cuda_stream();
 
@@ -1264,7 +1265,7 @@ extern "C" void sw_regular_backward_warp_hip(
 ) {
     int threads = 256;
     hipStream_t stream = orihime::common::get_cuda_stream();
-    int warp_threads = SW_WARPS_PER_BLOCK * SW_WARP_SIZE;
+    int warp_threads = SW_WARPS_PER_BLOCK * get_current_device_wavefront_size();
     int warp_blocks = static_cast<int>(
         (static_cast<int64_t>(B) + SW_WARPS_PER_BLOCK - 1) / SW_WARPS_PER_BLOCK
     );

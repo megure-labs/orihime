@@ -13,6 +13,7 @@
 #include "common/numerics.hiph"
 #include "common/reduce.hiph"
 #include "common/softmax.hiph"
+#include "common/wavefront.hiph"
 
 using namespace orihime::common;
 

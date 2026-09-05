@@ -9,6 +9,9 @@
 
 #include "kernels_gpu.hiph"
 #include "common/hip_utils.h"
+#include "common/wavefront.hiph"
+
+using namespace orihime::common;
 #include <hip/hip_runtime.h>
 
 namespace orihime {
@@ -18,7 +21,7 @@ namespace lcs {
 // Constants and Device Helpers
 // ============================================================================
 
-#define WARP_SIZE 32
+#define WARP_SIZE wavefront_size()
 
 // Safe exponential with bounds for float32
 template<typename T>
@@ -32,14 +35,14 @@ template<typename T>
 __device__ __forceinline__ T warp_reduce_sum_lcs(T v) {
     #pragma unroll
     for (int offset = WARP_SIZE / 2; offset > 0; offset >>= 1) {
-        v += __shfl_down_sync(0xffffffffffffffffULL, v, offset);
+        v += __shfl_down_sync(FULL_WAVE_MASK, v, offset, WARP_SIZE);
     }
     return v;
 }
 
 template<typename T>
 __device__ __forceinline__ T block_reduce_sum_lcs(T v) {
-    __shared__ T shared[32];
+    __shared__ T shared[MAX_WAVEFRONTS_PER_BLOCK];
     int lane = threadIdx.x % WARP_SIZE;
     int wid  = threadIdx.x / WARP_SIZE;
 

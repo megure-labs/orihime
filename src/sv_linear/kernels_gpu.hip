@@ -33,20 +33,21 @@
 // Shared utilities
 #include "common/hip_utils.h"
 #include "common/numerics.hiph"
+#include "common/wavefront.hiph"
 
 using namespace orihime::common;
 
 namespace {
 
-constexpr int SV_LINEAR_WARP_SIZE = 32;
+#define SV_LINEAR_WARP_SIZE wavefront_size()
 
 __device__ __forceinline__ void sv_linear_warp_reduce_sum(KahanSum& acc) {
     int lane = threadIdx.x % SV_LINEAR_WARP_SIZE;
 
     #pragma unroll
     for (int offset = SV_LINEAR_WARP_SIZE / 2; offset > 0; offset >>= 1) {
-        float peer_sum = __shfl_down_sync(0xffffffffULL, acc.sum, offset);
-        float peer_c = __shfl_down_sync(0xffffffffULL, acc.c, offset);
+        float peer_sum = __shfl_down_sync(FULL_WAVE_MASK, acc.sum, offset, SV_LINEAR_WARP_SIZE);
+        float peer_c = __shfl_down_sync(FULL_WAVE_MASK, acc.c, offset, SV_LINEAR_WARP_SIZE);
         if (lane + offset < SV_LINEAR_WARP_SIZE) {
             acc.add(peer_sum);
             acc.add(-peer_c);
@@ -57,8 +58,8 @@ __device__ __forceinline__ void sv_linear_warp_reduce_sum(KahanSum& acc) {
 __device__ __forceinline__ float sv_linear_block_reduce_sum(
     const KahanSum& local_acc
 ) {
-    __shared__ float shared_sum[32];
-    __shared__ float shared_c[32];
+    __shared__ float shared_sum[MAX_WAVEFRONTS_PER_BLOCK];
+    __shared__ float shared_c[MAX_WAVEFRONTS_PER_BLOCK];
 
     int lane = threadIdx.x % SV_LINEAR_WARP_SIZE;
     int warp_id = threadIdx.x / SV_LINEAR_WARP_SIZE;
@@ -95,14 +96,14 @@ __device__ __forceinline__ float sv_linear_warp_reduce_max(float value) {
     for (int offset = SV_LINEAR_WARP_SIZE / 2; offset > 0; offset >>= 1) {
         value = fmaxf(
             value,
-            __shfl_down_sync(0xffffffffULL, value, offset)
+            __shfl_down_sync(FULL_WAVE_MASK, value, offset, SV_LINEAR_WARP_SIZE)
         );
     }
     return value;
 }
 
 __device__ __forceinline__ float sv_linear_block_reduce_max(float value) {
-    __shared__ float shared[32];
+    __shared__ float shared[MAX_WAVEFRONTS_PER_BLOCK];
 
     int lane = threadIdx.x % SV_LINEAR_WARP_SIZE;
     int warp_id = threadIdx.x / SV_LINEAR_WARP_SIZE;
