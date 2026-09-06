@@ -38,7 +38,7 @@ from importlib.metadata import PackageNotFoundError, version
 try:
     __version__ = version("orihime")
 except PackageNotFoundError:
-    __version__ = "0.1.0+source"
+    __version__ = "0.1.1+source"
 
 # Load the extension before importing any kernel adapters.
 from . import _ops as _ops

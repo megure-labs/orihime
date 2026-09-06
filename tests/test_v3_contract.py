@@ -646,4 +646,4 @@ def test_damerau_structural_sources_and_builder_contract() -> None:
 
 def test_public_version_is_available():
     assert isinstance(orihime.__version__, str)
-    assert orihime.__version__.startswith("0.1.0")
+    assert orihime.__version__.startswith("0.1.1")

@@ -122,7 +122,7 @@ def _function_and_primals(
     structural = _structural_kwargs(case, inputs[0])
     target = _target(case, observable)
 
-    # Entropy exposes only its primary-score derivative in 0.1.0. Scalar
+    # Entropy exposes only its primary-score derivative in the 0.1 series. Scalar
     # parameter directions, and CKY's leaf direction, are explicitly outside
     # the shipped derivative coverage in docs/DERIVATIVE_COVERAGE.md.
     if observable == "entropy":

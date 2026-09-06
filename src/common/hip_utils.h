@@ -95,6 +95,20 @@ inline hipStream_t get_cuda_stream() {
     return at::hip::getCurrentHIPStreamMasqueradingAsCUDA();
 }
 
+// Return the native wavefront width for the active HIP device. Device kernels
+// use warpSize directly; host launch code needs the matching runtime property.
+inline int get_current_device_wavefront_size() {
+    int device = -1;
+    hipDeviceProp_t properties{};
+    C10_HIP_CHECK(hipGetDevice(&device));
+    C10_HIP_CHECK(hipGetDeviceProperties(&properties, device));
+    TORCH_CHECK(
+        properties.warpSize == 32 || properties.warpSize == 64,
+        "unsupported HIP wavefront size: ", properties.warpSize
+    );
+    return properties.warpSize;
+}
+
 // ----------------------------------------------------------------------------
 // Caching-allocator stream tracking (host translation units only)
 // ----------------------------------------------------------------------------

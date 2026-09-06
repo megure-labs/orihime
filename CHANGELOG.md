@@ -5,6 +5,21 @@ versioning from its first public release. While the version is below `1.0.0`,
 minor and patch releases are not guaranteed to be backward compatible; pin an
 exact version when API stability is required.
 
+## 0.1.1 — 2026-09-06
+
+### Fixed
+
+- HIP kernels across all fourteen public algorithms now use the active AMD
+  wavefront width: wave32 on RDNA and wave64 on CDNA. Host launch dimensions,
+  shuffle masks, and shared reduction storage follow the same native width,
+  restoring correct execution on CDNA while retaining RDNA support.
+
+### Added
+
+- A reproducible 572-job FP32 GPU benchmark suite covering the public map and
+  value APIs, production shape profiles for all fourteen algorithms, filtered
+  runs, resumable JSONL output, and GPU-event timing.
+
 ## 0.1.0 — 2026-08-28
 
 Initial public release of differentiable dynamic-programming operators for

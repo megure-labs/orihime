@@ -98,17 +98,19 @@ python -m pip install . --no-build-isolation --no-cache-dir \
 - Reproducible release builds always select a named profile or explicit custom
   list; `native` is intentionally machine-dependent.
 
-The `0.1.0` release profile is build- and runtime-validated from the same
-multi-family configuration on both of these machines:
+The `0.1.1` HIP implementation is build- and runtime-validated across all 14
+public algorithms on these machines:
 
-| GPU | Architecture | ROCm | PyTorch |
-| --- | --- | --- | --- |
-| AMD Radeon 8060S Graphics | `gfx1151` | 7.13 | 2.10 |
-| AMD Radeon AI PRO R9700 | `gfx1201` | 7.14 | 2.12 |
+| GPU | Architecture | Wavefront | ROCm | PyTorch |
+| --- | --- | --- | --- | --- |
+| AMD Radeon 8060S Graphics | `gfx1151` | 32 | 7.13 | 2.10 |
+| AMD Radeon AI PRO R9700 | `gfx1201` | 32 | 7.14 | 2.12 |
+| AMD Instinct MI300X | `gfx942` | 64 | 7.14 | 2.12 |
 
-The generic code objects cover the listed RDNA families, including both
-validation GPUs. Custom CDNA targets such as `gfx90a` and `gfx942` also compile,
-but this release does not claim runtime validation for them.
+The `release-rocm7-rdna` generic code objects cover the first two validation
+GPUs and their listed RDNA families. CDNA machines use `native` or `custom`;
+`gfx942` has runtime validation, while other explicit CDNA targets are not
+claimed as runtime-validated by this release.
 
 ## Editable installs
 

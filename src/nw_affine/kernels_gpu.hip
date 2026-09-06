@@ -21,6 +21,7 @@
 #include "common/hip_utils.h"
 #include "common/numerics.hiph"
 #include "common/reduce.hiph"
+#include "common/wavefront.hiph"
 
 using namespace orihime::common;
 

@@ -1,0 +1,1343 @@
+{
+  "family_shape_profiles": {
+    "cky": "cky-production-v1",
+    "damerau": "rectangular-production-v1",
+    "dtw": "rectangular-production-v1",
+    "eisner": "eisner-production-v1",
+    "lcs": "rectangular-production-v1",
+    "lev": "rectangular-production-v1",
+    "mas": "mas-production-v1",
+    "nw": "rectangular-production-v1",
+    "nw_affine": "rectangular-production-v1",
+    "osa": "rectangular-production-v1",
+    "sv": "rectangular-production-v1",
+    "sv_affine": "rectangular-production-v1",
+    "sw": "rectangular-production-v1",
+    "sw_affine": "rectangular-production-v1"
+  },
+  "origin": {
+    "adaptation": "Performance cases only; sv_linear is exposed as the Orihime public name sv.",
+    "project": "Megure Labs d\u00b2p all-kernel tuning grid",
+    "source_sha256": "sha256:b7477c6bef028a770e23c3f748c7c15b4795f8147a44c1def930ebe9546784ec"
+  },
+  "schema_version": "orihime-grid-benchmark/v1",
+  "shape_profiles": {
+    "cky-production-v1": {
+      "cases": [
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 16
+          },
+          "id": "cky-b1-n16",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "small production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 32
+          },
+          "id": "cky-b1-n32",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "medium production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 48
+          },
+          "id": "cky-b1-n48",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "intermediate chart",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 64
+          },
+          "id": "cky-b1-n64",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "large production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 96
+          },
+          "id": "cky-b1-n96",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "very large chart",
+          "required_for_promotion": true,
+          "tags": [
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 128
+          },
+          "id": "cky-b1-n128",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "maximum production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "maximum",
+            "max-shape-fit"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 31
+          },
+          "id": "cky-b1-n31",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "odd warp boundary",
+          "required_for_promotion": true,
+          "tags": [
+            "odd"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 63
+          },
+          "id": "cky-b1-n63",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "odd block boundary",
+          "required_for_promotion": true,
+          "tags": [
+            "odd"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 127
+          },
+          "id": "cky-b1-n127",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "near-maximum odd",
+          "required_for_promotion": true,
+          "tags": [
+            "odd",
+            "maximum"
+          ]
+        },
+        {
+          "batch": 16,
+          "dimensions": {
+            "length": 16
+          },
+          "id": "cky-b16-n16",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "small chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 64,
+          "dimensions": {
+            "length": 16
+          },
+          "id": "cky-b64-n16",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "maximum-batch"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "length": 32
+          },
+          "id": "cky-b8-n32",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "medium chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 32,
+          "dimensions": {
+            "length": 32
+          },
+          "id": "cky-b32-n32",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput medium chart",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 4,
+          "dimensions": {
+            "length": 64
+          },
+          "id": "cky-b4-n64",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "large chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "large"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "length": 64
+          },
+          "id": "cky-b8-n64",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput large chart",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 128
+          },
+          "id": "cky-b1-n128-masked",
+          "length_policy": {
+            "mode": "not-supported"
+          },
+          "mask_policy": {
+            "mode": "structured-sparse"
+          },
+          "purpose": "maximum structured-mask chart",
+          "required_for_promotion": true,
+          "tags": [
+            "mask",
+            "maximum"
+          ]
+        }
+      ],
+      "shape_class": "triangular-chart"
+    },
+    "eisner-production-v1": {
+      "cases": [
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 16
+          },
+          "id": "eisner-b1-n16",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "small production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 32
+          },
+          "id": "eisner-b1-n32",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "medium production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 48
+          },
+          "id": "eisner-b1-n48",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "intermediate chart",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 64
+          },
+          "id": "eisner-b1-n64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "large production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 96
+          },
+          "id": "eisner-b1-n96",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "very large chart",
+          "required_for_promotion": true,
+          "tags": [
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 128
+          },
+          "id": "eisner-b1-n128",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "maximum production chart",
+          "required_for_promotion": true,
+          "tags": [
+            "maximum",
+            "max-shape-fit"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 31
+          },
+          "id": "eisner-b1-n31",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "odd warp boundary",
+          "required_for_promotion": true,
+          "tags": [
+            "odd"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 63
+          },
+          "id": "eisner-b1-n63",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "odd block boundary",
+          "required_for_promotion": true,
+          "tags": [
+            "odd"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 127
+          },
+          "id": "eisner-b1-n127",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "near-maximum odd",
+          "required_for_promotion": true,
+          "tags": [
+            "odd",
+            "maximum"
+          ]
+        },
+        {
+          "batch": 16,
+          "dimensions": {
+            "length": 16
+          },
+          "id": "eisner-b16-n16",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "small chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 64,
+          "dimensions": {
+            "length": 16
+          },
+          "id": "eisner-b64-n16",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "maximum-batch"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "length": 32
+          },
+          "id": "eisner-b8-n32",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "medium chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 32,
+          "dimensions": {
+            "length": 32
+          },
+          "id": "eisner-b32-n32",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput medium chart",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 4,
+          "dimensions": {
+            "length": 64
+          },
+          "id": "eisner-b4-n64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "large chart batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "large"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "length": 64
+          },
+          "id": "eisner-b8-n64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput large chart",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "large"
+          ]
+        },
+        {
+          "batch": 4,
+          "dimensions": {
+            "length": 128
+          },
+          "id": "eisner-b4-n128-ragged",
+          "length_policy": {
+            "mode": "explicit",
+            "values": [
+              128,
+              97,
+              65,
+              17
+            ]
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "maximum padded ragged chart",
+          "required_for_promotion": true,
+          "tags": [
+            "ragged",
+            "maximum",
+            "max-shape-fit"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length": 128
+          },
+          "id": "eisner-b1-n128-masked",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "structured-pruned-arcs"
+          },
+          "purpose": "maximum pruned arc chart",
+          "required_for_promotion": true,
+          "tags": [
+            "mask",
+            "maximum"
+          ]
+        }
+      ],
+      "shape_class": "triangular-chart"
+    },
+    "mas-production-v1": {
+      "cases": [
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 32,
+            "time": 256
+          },
+          "id": "mas-b1-256x32",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "short source production",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced-for-mas"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 64,
+            "time": 512
+          },
+          "id": "mas-b1-512x64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "medium production",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced-for-mas"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 128,
+            "time": 1024
+          },
+          "id": "mas-b1-1024x128",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "large production",
+          "required_for_promotion": true,
+          "tags": [
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 128,
+            "time": 2048
+          },
+          "id": "mas-b1-2048x128",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "long-time narrow-source",
+          "required_for_promotion": true,
+          "tags": [
+            "maximum"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 256,
+            "time": 2048
+          },
+          "id": "mas-b1-2048x256",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "long-time medium-source",
+          "required_for_promotion": true,
+          "tags": [
+            "maximum"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 512,
+            "time": 2048
+          },
+          "id": "mas-b1-2048x512",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "long-time wide-source",
+          "required_for_promotion": true,
+          "tags": [
+            "maximum"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 257,
+            "time": 2047
+          },
+          "id": "mas-b1-2047x257",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "odd launch-boundary pressure",
+          "required_for_promotion": true,
+          "tags": [
+            "odd"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "source": 2048,
+            "time": 2048
+          },
+          "id": "mas-b1-2048x2048",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "square maximum stress",
+          "required_for_promotion": true,
+          "tags": [
+            "maximum",
+            "max-shape-fit"
+          ]
+        },
+        {
+          "batch": 16,
+          "dimensions": {
+            "source": 32,
+            "time": 256
+          },
+          "id": "mas-b16-256x32",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "source": 64,
+            "time": 512
+          },
+          "id": "mas-b8-512x64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "large batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 4,
+          "dimensions": {
+            "source": 512,
+            "time": 2048
+          },
+          "id": "mas-b4-2048x512-ragged",
+          "length_policy": {
+            "mode": "explicit",
+            "values": [
+              [
+                2048,
+                512
+              ],
+              [
+                1537,
+                257
+              ],
+              [
+                1023,
+                127
+              ],
+              [
+                257,
+                31
+              ]
+            ]
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "padded ragged maximum",
+          "required_for_promotion": true,
+          "tags": [
+            "ragged",
+            "maximum",
+            "max-shape-fit"
+          ]
+        }
+      ],
+      "shape_class": "rectangular-dp"
+    },
+    "rectangular-production-v1": {
+      "cases": [
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 64,
+            "length2": 64
+          },
+          "id": "rect-b1-64x64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "balanced launch-overhead transition",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 128,
+            "length2": 128
+          },
+          "id": "rect-b1-128x128",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "balanced small production",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 256,
+            "length2": 256
+          },
+          "id": "rect-b1-256x256",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "balanced medium production",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 512,
+            "length2": 512
+          },
+          "id": "rect-b1-512x512",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "balanced large production",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 1024,
+            "length2": 1024
+          },
+          "id": "rect-b1-1024x1024",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "balanced scaling",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced",
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 2048,
+            "length2": 2048
+          },
+          "id": "rect-b1-2048x2048",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "maximum balanced production",
+          "required_for_promotion": true,
+          "tags": [
+            "balanced",
+            "maximum"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 128,
+            "length2": 2048
+          },
+          "id": "rect-b1-128x2048",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "extreme wide aspect",
+          "required_for_promotion": true,
+          "tags": [
+            "wide",
+            "maximum"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 2048,
+            "length2": 128
+          },
+          "id": "rect-b1-2048x128",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "extreme tall aspect",
+          "required_for_promotion": true,
+          "tags": [
+            "tall",
+            "maximum"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 512,
+            "length2": 2048
+          },
+          "id": "rect-b1-512x2048",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "wide production aspect",
+          "required_for_promotion": true,
+          "tags": [
+            "wide",
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 2048,
+            "length2": 512
+          },
+          "id": "rect-b1-2048x512",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "tall production aspect",
+          "required_for_promotion": true,
+          "tags": [
+            "tall",
+            "large"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 511,
+            "length2": 1023
+          },
+          "id": "rect-b1-511x1023",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "odd wide boundary pressure",
+          "required_for_promotion": true,
+          "tags": [
+            "odd",
+            "wide"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 1023,
+            "length2": 511
+          },
+          "id": "rect-b1-1023x511",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "odd tall boundary pressure",
+          "required_for_promotion": true,
+          "tags": [
+            "odd",
+            "tall"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 1023,
+            "length2": 2047
+          },
+          "id": "rect-b1-1023x2047",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "near-maximum odd wide",
+          "required_for_promotion": true,
+          "tags": [
+            "odd",
+            "wide",
+            "maximum"
+          ]
+        },
+        {
+          "batch": 1,
+          "dimensions": {
+            "length1": 2047,
+            "length2": 1023
+          },
+          "id": "rect-b1-2047x1023",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "near-maximum odd tall",
+          "required_for_promotion": true,
+          "tags": [
+            "odd",
+            "tall",
+            "maximum"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "length1": 64,
+            "length2": 64
+          },
+          "id": "rect-b8-64x64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "small batched",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 32,
+          "dimensions": {
+            "length1": 64,
+            "length2": 64
+          },
+          "id": "rect-b32-64x64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "medium batched",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 128,
+          "dimensions": {
+            "length1": 64,
+            "length2": 64
+          },
+          "id": "rect-b128-64x64",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "maximum-batch"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "length1": 128,
+            "length2": 128
+          },
+          "id": "rect-b8-128x128",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "batched medium cells",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 32,
+          "dimensions": {
+            "length1": 128,
+            "length2": 128
+          },
+          "id": "rect-b32-128x128",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "high-throughput medium batch",
+          "required_for_promotion": true,
+          "tags": [
+            "batch"
+          ]
+        },
+        {
+          "batch": 8,
+          "dimensions": {
+            "length1": 256,
+            "length2": 256
+          },
+          "id": "rect-b8-256x256",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "batched large cells",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "large"
+          ]
+        },
+        {
+          "batch": 4,
+          "dimensions": {
+            "length1": 512,
+            "length2": 512
+          },
+          "id": "rect-b4-512x512",
+          "length_policy": {
+            "mode": "full"
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "batched large production",
+          "required_for_promotion": true,
+          "tags": [
+            "batch",
+            "large"
+          ]
+        },
+        {
+          "batch": 4,
+          "dimensions": {
+            "length1": 2048,
+            "length2": 2048
+          },
+          "id": "rect-b4-2048x2048-ragged",
+          "length_policy": {
+            "mode": "explicit",
+            "values": [
+              [
+                2048,
+                2048
+              ],
+              [
+                1537,
+                997
+              ],
+              [
+                511,
+                2047
+              ],
+              [
+                127,
+                257
+              ]
+            ]
+          },
+          "mask_policy": {
+            "mode": "none"
+          },
+          "purpose": "maximum padded ragged production",
+          "required_for_promotion": true,
+          "tags": [
+            "ragged",
+            "maximum",
+            "max-shape-fit"
+          ]
+        }
+      ],
+      "shape_class": "rectangular-dp"
+    }
+  }
+}

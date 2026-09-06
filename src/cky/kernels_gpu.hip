@@ -12,18 +12,19 @@
 #include "common/hip_utils.h"
 #include "common/numerics.hiph"
 #include "common/reduce.hiph"
+#include "common/wavefront.hiph"
 
 using namespace orihime::common;
 
 namespace {
 
-constexpr unsigned long long CKY_FULL_MASK = 0xffffffffffffffffULL;
-constexpr int CKY_WARP_SIZE = 32;
+#define CKY_FULL_MASK FULL_WAVE_MASK
+#define CKY_WARP_SIZE wavefront_size()
 
 __device__ __forceinline__ float cky_warp_reduce_max(float v) {
     #pragma unroll
     for (int offset = CKY_WARP_SIZE / 2; offset > 0; offset >>= 1) {
-        v = fmaxf(v, __shfl_down_sync(CKY_FULL_MASK, v, offset));
+        v = fmaxf(v, __shfl_down_sync(CKY_FULL_MASK, v, offset, CKY_WARP_SIZE));
     }
     return v;
 }
@@ -31,7 +32,7 @@ __device__ __forceinline__ float cky_warp_reduce_max(float v) {
 __device__ __forceinline__ float cky_warp_reduce_sum(float v) {
     #pragma unroll
     for (int offset = CKY_WARP_SIZE / 2; offset > 0; offset >>= 1) {
-        v += __shfl_down_sync(CKY_FULL_MASK, v, offset);
+        v += __shfl_down_sync(CKY_FULL_MASK, v, offset, CKY_WARP_SIZE);
     }
     return v;
 }
@@ -70,7 +71,7 @@ __device__ __forceinline__ float cky_span_max(
             v = left + right + ms;
         }
         float chunk_max = cky_warp_reduce_max(v);
-        max_v = fmaxf(max_v, __shfl_sync(CKY_FULL_MASK, chunk_max, 0));
+        max_v = fmaxf(max_v, __shfl_sync(CKY_FULL_MASK, chunk_max, 0, CKY_WARP_SIZE));
     }
     return max_v;
 }
@@ -92,7 +93,7 @@ __device__ __forceinline__ float cky_span_sumexp(
             contrib = safe_exp((v - max_v) / T);
         }
         float chunk_sum = cky_warp_reduce_sum(contrib);
-        sum_exp += __shfl_sync(CKY_FULL_MASK, chunk_sum, 0);
+        sum_exp += __shfl_sync(CKY_FULL_MASK, chunk_sum, 0, CKY_WARP_SIZE);
     }
     return sum_exp;
 }
@@ -391,7 +392,7 @@ __global__ void cky_backward_persistent_kernel(
             }
 
             float e_term = cky_warp_reduce_sum(e_term_partial);
-            e_term = __shfl_sync(CKY_FULL_MASK, e_term, 0);
+            e_term = __shfl_sync(CKY_FULL_MASK, e_term, 0, CKY_WARP_SIZE);
             if (lane == 0) {
                 float Zij = z[i * n + j];
                 float grad_T_ij = beta_ij * (Zij - e_term) / T;
@@ -580,7 +581,7 @@ __global__ void cky_hvp_backward_persistent_kernel(
                 }
             }
             float E_d_term = cky_warp_reduce_sum(partial_e);
-            E_d_term = __shfl_sync(CKY_FULL_MASK, E_d_term, 0);
+            E_d_term = __shfl_sync(CKY_FULL_MASK, E_d_term, 0, CKY_WARP_SIZE);
 
             for (int k_base = i; k_base < j; k_base += CKY_WARP_SIZE) {
                 int k = k_base + lane;
@@ -777,8 +778,8 @@ __global__ void cky_param_grad_backward_persistent_kernel(
             }
             float E_term = cky_warp_reduce_sum(partial_term);
             float E_d_term = cky_warp_reduce_sum(partial_dterm);
-            E_term = __shfl_sync(CKY_FULL_MASK, E_term, 0);
-            E_d_term = __shfl_sync(CKY_FULL_MASK, E_d_term, 0);
+            E_term = __shfl_sync(CKY_FULL_MASK, E_term, 0, CKY_WARP_SIZE);
+            E_d_term = __shfl_sync(CKY_FULL_MASK, E_d_term, 0, CKY_WARP_SIZE);
 
             for (int k_base = i; k_base < j; k_base += CKY_WARP_SIZE) {
                 int k = k_base + lane;

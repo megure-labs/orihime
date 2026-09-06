@@ -128,7 +128,7 @@ and `jacrev` over their differentiable inputs and tensor parameters.
 Entropy differentiates only through its primary score or cost input.
 Scalar-parameter derivatives and CKY `leaf_scores` derivatives raise
 `NotImplementedError` instead of returning a silent zero. `jacfwd` and nested
-forward-mode compositions are not supported in 0.1.0.
+forward-mode compositions are not supported in the 0.1 series.
 
 ## Explicit operations
 
@@ -237,7 +237,7 @@ assert torch.count_nonzero(ragged_map[1, 3:]) == 0
 assert torch.count_nonzero(ragged_map[1, :, 4:]) == 0
 ```
 
-Orihime 0.1.0 does not accept an empty leading batch (`B=0`) on CPU or CUDA.
+Orihime 0.1 does not accept an empty leading batch (`B=0`) on CPU or GPU.
 Handle empty minibatches before calling `ohm`.
 
 OSA uses a boolean `allowed_transpositions` shaped like its substitution costs.

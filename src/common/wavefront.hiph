@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: Apache-2.0
+// wavefront.hiph - Native AMD wavefront properties for HIP kernels
+
+#pragma once
+
+#include <hip/hip_runtime.h>
+
+namespace orihime {
+namespace common {
+
+// HIP exposes the target's native SIMD width through warpSize: 32 lanes for
+// RDNA code objects and 64 lanes for CDNA code objects. Keep this as a device
+// query so a fat binary specializes each kernel for the code object selected
+// by the runtime.
+__device__ __forceinline__ int wavefront_size() {
+    return static_cast<int>(warpSize);
+}
+
+// HIP masks are 64-bit on AMD. ROCm ignores the upper half for wave32 code
+// objects, while wave64 code objects require all bits to participate.
+inline constexpr unsigned long long FULL_WAVE_MASK = ~0ULL;
+
+// A 1024-thread block contains at most 32 native wavefronts (when wave32 is
+// active). Reduction scratch arrays sized to this bound also cover wave64.
+inline constexpr int MAX_WAVEFRONTS_PER_BLOCK = 32;
+
+// Every reduction block in Orihime uses 256 threads. Requiring a multiple of
+// 64 keeps compile-time launch constants valid for both native wave widths.
+inline constexpr int PORTABLE_WAVEFRONT_MULTIPLE = 64;
+
+}  // namespace common
+}  // namespace orihime

@@ -20,6 +20,14 @@ EXPECTED_HOSTS = [
 
 
 def _normalize_hip_to_cuda(source: str) -> str:
+    source = source.replace('#include "common/wavefront.hiph"\n', "")
+    source = source.replace(
+        "#define SV_AFFINE_WARP_SIZE wavefront_size()",
+        "constexpr int SV_AFFINE_WARP_SIZE = 32;",
+    )
+    source = source.replace("FULL_WAVE_MASK", "0xffffffff")
+    source = source.replace("MAX_WAVEFRONTS_PER_BLOCK", "32")
+    source = source.replace(", SV_AFFINE_WARP_SIZE)", ")")
     replacements = (
         ("<hip/hip_runtime.h>", "<cuda_runtime.h>"),
         ("<c10/hip/HIPException.h>", "<c10/cuda/CUDAException.h>"),
