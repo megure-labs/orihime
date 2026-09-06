@@ -14,7 +14,7 @@ disclosure and a fix when appropriate.
 
 ## Supported versions
 
-Until a newer public release exists, `0.1.0` is the supported release line.
+Until a newer public release exists, `0.1.1` is the supported release line.
 After future releases, only the latest patch release of each explicitly listed
 supported line will receive security fixes.
 

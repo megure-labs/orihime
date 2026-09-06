@@ -4,7 +4,7 @@
 page records the planned binary grid.
 
 Orihime is also pre-1.0. Versions before `1.0.0` are not guaranteed to preserve
-Python APIs across releases. Pin `orihime==0.1.0` when the exact 0.1 interface
+Python APIs across releases. Pin `orihime==0.1.1` when the exact 0.1 interface
 is required. Binary compatibility and API stability are separate concerns.
 
 Orihime's native extension is compiled against PyTorch's C++ ABI. A future
@@ -51,14 +51,14 @@ record. See [Change provenance and merge policy](provenance-policy.md).
 ## Artifact identity
 
 For PyTorch 2.13/CUDA 13.0 on CPython 3.12, the planned wheel version is
-`0.1.0+torch213cu130`. Its metadata will require `torch==2.13.*`. Each
+`0.1.1+torch213cu130`. Its metadata will require `torch==2.13.*`. Each
 PyTorch/lane pair will have a separate wheel index, preventing pip from seeing
 incompatible files.
 
 The matching planned Conda build is named:
 
 ```text
-orihime-0.1.0-0_torch213_cu130_py312
+orihime-0.1.1-0_torch213_cu130_py312
 ```
 
 Conda cannot detect a pip-installed PyTorch ABI while solving. Published

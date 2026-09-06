@@ -103,7 +103,7 @@ assert per_example_gap_counts.shape == values.shape
 For an affine-gap operator, derivatives with respect to `gap_open_score` and
 `gap_extend_score` give the expected open and extension counts. The same rule
 applies to cost parameters such as insertion and deletion costs. These are
-derived statistics rather than separate `forward` fields in 0.1.0.
+derived statistics rather than separate `forward` fields in the 0.1 series.
 
 ## How do I obtain a parameter VJP of the map?
 
@@ -129,7 +129,7 @@ Broadcasting is not supported.
 
 Entropy supports differentiation through the primary score or cost tensor
 only. The required second-derivative blocks for scalar parameters and CKY
-`leaf_scores` are not implemented in 0.1.0, so those gradients raise
+`leaf_scores` are not implemented in the 0.1 series, so those gradients raise
 `NotImplementedError`. Detach those directions or use finite differences.
 
 ## What shape does `lengths` use?
@@ -140,7 +140,7 @@ device. CKY derives its size from its inputs and has no lengths argument.
 
 ## Are empty inputs supported?
 
-Orihime 0.1.0 does not accept an empty leading batch (`B=0`). DTW also rejects
+Orihime 0.1 does not accept an empty leading batch (`B=0`). DTW also rejects
 one-sided empty lengths because no feasible path exists. Handle empty
 minibatches before calling `ohm`.
 

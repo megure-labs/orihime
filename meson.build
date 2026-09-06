@@ -1,5 +1,5 @@
 project('orihime', 'cpp',
-  version : '0.1.0',
+  version : '0.1.1',
   # The HIP lane passes custom_target outputs through `objects:`, supported by
   # the Meson floor already declared in pyproject.toml.
   meson_version : '>=1.2.0',

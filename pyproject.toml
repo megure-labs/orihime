@@ -10,7 +10,7 @@ build-backend = "mesonpy"
 
 [project]
 name = "orihime"
-version = "0.1.0"
+version = "0.1.1"
 description = "Differentiable Dynamic Programming operators for PyTorch on CPU, CUDA, and HIP"
 readme = "README.md"
 authors = [{ name = "Casey Mogilevsky" }]

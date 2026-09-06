@@ -43,8 +43,9 @@ cost above rather than scaling linearly with `B`.
   through **Blackwell (`sm_121`)**. A release build includes several targets;
   a native build targets the attached GPU. See
   [source-build.md](source-build.md).
-- HIP device code covers all 14 public algorithms and can target generic
-  RDNA2, RDNA3/RDNA3.5, and RDNA4 code objects in one ROCm 7 build.
+- HIP device code covers all 14 public algorithms. It uses native wave32 on
+  RDNA and wave64 on CDNA, and supports native, multi-family RDNA, and explicit
+  CDNA target builds.
 - GPU wrappers validate tensor ownership and select the input tensor's device,
   so multi-GPU dispatch does not silently launch on the wrong device.
 

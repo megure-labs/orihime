@@ -1035,7 +1035,7 @@ def _entropy_unsupported_direction_error(
     )
     return NotImplementedError(
         f"{spec.name}_entropy is differentiable only w.r.t. its primary "
-        f"{primary_name} input in 0.1.0; the entropy gradient w.r.t. "
+        f"{primary_name} input in this release; the entropy gradient w.r.t. "
         f"parameter {public_direction_name} (a second derivative involving "
         "temperature) is not available -- see DERIVATIVE_COVERAGE.md. "
         "Detach the parameter or use finite differences."
