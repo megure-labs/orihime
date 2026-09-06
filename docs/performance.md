@@ -67,6 +67,15 @@ cost above rather than scaling linearly with `B`.
 - `orihime.cky` and `orihime.eisner` are cubic in sequence length. Keep `N`
   modest or budget accordingly.
 
+## Reproducible grid benchmark
+
+Run `python benchmarks/grid.py --output results.jsonl` to measure the public
+`value` and `map` APIs across all 14 algorithms. The 572-job FP32 matrix uses
+the production shape profiles from the Megure Labs d²p kernel tuning campaign,
+including rectangular, odd, batched, ragged, maximum-size, and structured-mask
+cases. See [the benchmark guide](../benchmarks/README.md) for selection and
+resume options.
+
 ## See also
 
 [Usage guide](usage.md) · [Algorithm guides](algorithms/) ·
