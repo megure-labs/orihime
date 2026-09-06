@@ -20,9 +20,32 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
+      # pull_request_target is deliberate: the policy, helper, and validator
+      # come from the trusted base commit.
+      # Never execute or check out pull-request code in this job.
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      # The event payload can retain an obsolete association after repository
+      # or organization access changes. Resolve the current association from
+      # GitHub before making an admission decision.
+      - name: Resolve the current author association
+        id: author
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          association="$(.github/scripts/resolve-pr-author-association.sh "${REPOSITORY}" "${PR_NUMBER}")"
+          echo "Current author association: ${association}"
+          echo "association=${association}" >> "${GITHUB_OUTPUT}"
+
       - name: Enforce temporary internal-only contribution policy
         env:
-          AUTHOR_ASSOCIATION: ${{ github.event.pull_request.author_association }}
+          AUTHOR_ASSOCIATION: ${{ steps.author.outputs.association }}
         run: |
           case "${AUTHOR_ASSOCIATION}" in
             OWNER|MEMBER)
@@ -32,15 +55,6 @@ jobs:
               exit 1
               ;;
           esac
-
-      # pull_request_target is deliberate: the policy and validator come from
-      # the trusted base commit. Never execute or check out pull-request code in
-      # this job.
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: ${{ github.event.pull_request.base.sha }}
-          fetch-depth: 1
-          persist-credentials: false
 
       - name: Determine the forward-only enforcement state
         id: enforcement

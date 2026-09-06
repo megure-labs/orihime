@@ -16,17 +16,34 @@ concurrency:
 jobs:
   close-external-pull-request:
     name: Close external pull request
-    if: >-
-      github.repository == 'megure-labs/orihime' &&
-      github.event.pull_request.author_association != 'OWNER' &&
-      github.event.pull_request.author_association != 'MEMBER'
+    if: github.repository == 'megure-labs/orihime'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       # This trusted-base workflow never checks out or executes pull-request
       # content. It only comments on and closes the pull request through GitHub's
       # API.
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Resolve the current author association
+        id: author
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          association="$(.github/scripts/resolve-pr-author-association.sh "${REPOSITORY}" "${PR_NUMBER}")"
+          echo "Current author association: ${association}"
+          echo "association=${association}" >> "${GITHUB_OUTPUT}"
+
       - name: Explain the temporary policy
+        if: >-
+          steps.author.outputs.association != 'OWNER' &&
+          steps.author.outputs.association != 'MEMBER'
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
@@ -37,6 +54,9 @@ jobs:
             --field body='Megure Labs is temporarily not accepting external upstream contributions while the production Kaname verifier is being built and deployed. Forking and downstream modification remain permitted under Apache-2.0. Please see CONTRIBUTING.md.'
 
       - name: Close the pull request
+        if: >-
+          steps.author.outputs.association != 'OWNER' &&
+          steps.author.outputs.association != 'MEMBER'
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
