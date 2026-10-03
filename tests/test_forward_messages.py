@@ -91,7 +91,7 @@ def test_empty_batch(algorithm,device):
 
 
 @pytest.mark.parametrize("kwargs,match", [
-    ({"algorithm":"cky"},"algorithm"),
+    ({"algorithm":"unsupported"},"algorithm"),
     ({"temperature":0},"positive"),
     ({"temperature":float("nan")},"finite"),
     ({"gap_score":100.},"80"),

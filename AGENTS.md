@@ -38,7 +38,7 @@ import name stable unless a maintainer explicitly requests an API migration.
 ## Forward-message boundary
 
 `orihime.forward_messages` exposes only existing native forward tables and
-metadata for the twelve grid algorithms. It computes no structured attention
+metadata for the twelve grid algorithms plus CKY and Eisner. It computes no structured attention
 map and supplies no new autograd rule. Greedy/stochastic decoders, conditional
 selection surrogates and arbitrary message VJPs belong to the consuming package.
 Never add these backward implementations to Orihime as part of this interface.

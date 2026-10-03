@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
-#include "forward_messages/torch_common.h"
+#include "forward_messages/tree_common.h"
+#include "cky/kernels_cpu.h"
+#include "eisner/kernels_cpu.h"
 #include "sw/kernels_cpu.h"
 #include "sw_affine/kernels_cpu.h"
 #include "sv_linear/kernels_cpu.h"
@@ -15,6 +17,24 @@
 
 namespace orihime::forward_messages {
 namespace {
+std::tuple<Tensor,Tensor> run_tree(const Tensor& x, const Tensor& leaves,
+                                 const Tensor& temperature, const Tensor& lengths,
+                                 int64_t mode) {
+  const auto z=validate_tree(x,leaves,temperature,lengths,mode,false);
+  // Native Eisner receives contiguous separate planes, each [B,N,N].
+  auto alpha=at::zeros({z.planes,z.b,z.n,z.n},x.options());
+  auto value=at::zeros({z.b},x.options());
+  if (z.b == 0) return finish_tree(alpha,value,lengths,mode);
+  float* a=alpha.data_ptr<float>(); const int64_t stride=int64_t(z.b)*z.n*z.n;
+  if (mode == 0)
+    cky_forward_cpu(x.data_ptr<float>(),leaves.data_ptr<float>(),a,value.data_ptr<float>(),
+           temperature.data_ptr<float>(),z.b,z.n,temperature.numel() == 1);
+  else
+    orihime::eisner::cpu::forward(x.data_ptr<float>(),a,a+stride,a+2*stride,a+3*stride,
+            value.data_ptr<float>(),lengths.data_ptr<int>(),z.b,z.n,temperature.item<float>());
+  return finish_tree(alpha,value,lengths,mode);
+}
+
 std::tuple<Tensor,Tensor> run(const Tensor& x, const Tensor& lengths,
                             const Tensor& topology, int64_t mode,
                             double p0, double p1, double p2, double t, int64_t band) {
@@ -46,6 +66,7 @@ std::tuple<Tensor,Tensor> run(const Tensor& x, const Tensor& lengths,
 
 #ifdef USE_TORCH_LIBRARY
 TORCH_LIBRARY_IMPL(orihime, CPU, m) {
+  m.impl("tree_forward_messages", orihime::forward_messages::run_tree);
   m.impl("grid_forward_messages", orihime::forward_messages::run);
 }
 #endif
