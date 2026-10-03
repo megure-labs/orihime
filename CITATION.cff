@@ -2,8 +2,7 @@ cff-version: 1.2.0
 message: "If you use Orihime/orihime, please cite the accompanying paper."
 title: "Orihime (orihime): Differentiable Dynamic Programming for PyTorch"
 type: software
-version: 0.1.1
-date-released: 2026-09-06
+version: 0.1.2
 authors:
   - family-names: Mogilevsky
     given-names: Casey Sumagaysay

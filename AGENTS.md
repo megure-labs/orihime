@@ -35,6 +35,14 @@ import name stable unless a maintainer explicitly requests an API migration.
 - Keep dated hardware results, exact validation transcripts, private Kaname
   traces, and internal release narratives out of public README files.
 
+## Forward-message boundary
+
+`orihime.forward_messages` exposes only existing native forward tables and
+metadata for the twelve grid algorithms. It computes no structured attention
+map and supplies no new autograd rule. Greedy/stochastic decoders, conditional
+selection surrogates and arbitrary message VJPs belong to the consuming package.
+Never add these backward implementations to Orihime as part of this interface.
+
 ## Scope: actor-neutral
 
 Provenance, clean-room, licensing, and admission requirements attach to a

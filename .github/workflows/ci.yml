@@ -126,7 +126,7 @@ jobs:
           with open('pyproject.toml', 'rb') as handle:
               print(tomllib.load(handle)['project']['version'])
           PY
-          )" = "0.1.1"
+          )" = "0.1.2"
           test ! -e .repo-surface
           test ! -e docs/work
           test ! -e logs
@@ -144,7 +144,7 @@ jobs:
           test -f .provenance/change-provenance.schema.json
           test -f tools/validate_change_provenance.py
           python tools/validate_change_provenance.py --help >/dev/null
-          test "$(find src -type f \( -name '*.hip' -o -name '*.hiph' -o -name 'torch_hip.cpp' -o -name 'hip_utils.h' \) | wc -l)" -eq 47
+          test "$(find src -type f \( -name '*.hip' -o -name '*.hiph' -o -name 'torch_hip.cpp' -o -name 'hip_utils.h' \) | wc -l)" -eq 48
           test "$(find src -type f -name 'kernels_gpu.cu' | wc -l)" -eq 14
           test "$(find src -type f -name 'kernels_gpu.cuh' | wc -l)" -eq 14
           test "$(find src -type f -name 'kernels_gpu.hip' | wc -l)" -eq 14

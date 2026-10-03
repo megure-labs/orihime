@@ -1,5 +1,5 @@
 project('orihime', 'cpp',
-  version : '0.1.1',
+  version : '0.1.2',
   # The HIP lane passes custom_target outputs through `objects:`, supported by
   # the Meson floor already declared in pyproject.toml.
   meson_version : '>=1.2.0',
@@ -438,6 +438,8 @@ endif
 
 # Source files - Soft Smith-Waterman (regular + affine), Soft CKY, Soft DTW, Soft NW, Soft MAS, Soft Eisner, Soft Levenshtein, Soft LCS, Soft OSA, and Soft Damerau
 cpp_sources = files(
+  'src/forward_messages/registry.cpp',
+  'src/forward_messages/torch_cpu.cpp',
   # CKY module (fully self-contained)
   'src/cky/registry.cpp',
   'src/cky/torch_cpu.cpp',
@@ -498,6 +500,7 @@ extension_sources = cpp_sources
 
 if cuda_enabled
   extension_sources += files(
+    'src/forward_messages/torch_cuda.cpp',
     'src/cky/torch_cuda.cpp',
     'src/sw/torch_cuda.cpp',
     'src/sw_affine/torch_cuda.cpp',
@@ -530,7 +533,7 @@ if cuda_enabled
 endif
 
 if hip_enabled
-  extension_sources += hip_host_sources
+  extension_sources += hip_host_sources + files('src/forward_messages/torch_hip.cpp')
 endif
 
 # Build Python extension module
@@ -574,6 +577,7 @@ endif
 # Install Python source files
 python.install_sources(
   'orihime/__init__.py',
+  'orihime/messages.py',
   'orihime/_build_contract.py',
   'orihime/_build_info.py',
   'orihime/_compile.py',

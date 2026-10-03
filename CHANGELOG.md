@@ -5,6 +5,17 @@ versioning from its first public release. While the version is below `1.0.0`,
 minor and patch releases are not guaranteed to be backward compatible; pin an
 exact version when API stability is required.
 
+## 0.1.2 — Unreleased
+
+### Added
+
+- `forward_messages` exposes the existing native forward tables and soft
+  Bellman value for all twelve grid algorithms on CPU, CUDA and HIP, without
+  computing structured attention maps. Results describe state layout,
+  score/cost orientation, lengths and edit topology for external decoders.
+- Forward-message outputs are detached; consuming packages own decoding and
+  arbitrary message VJPs. Existing map/value/entropy derivatives are unchanged.
+
 ## 0.1.1 — 2026-09-06
 
 ### Fixed

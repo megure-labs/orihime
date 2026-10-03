@@ -197,3 +197,8 @@ Apache-2.0. See [CONTRIBUTING.md](CONTRIBUTING.md) for the admission policy and
 Apache License 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Report
 vulnerabilities through the private process described in
 [SECURITY.md](SECURITY.md).
+
+For external grid decoders, [`forward_messages`](docs/forward-messages.md)
+returns native forward DP tables without computing a structured attention map.
+This interface supports CPU, CUDA and ROCm. Decoders and arbitrary message
+VJPs remain in the consuming package.

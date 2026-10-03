@@ -38,7 +38,7 @@ from importlib.metadata import PackageNotFoundError, version
 try:
     __version__ = version("orihime")
 except PackageNotFoundError:
-    __version__ = "0.1.1+source"
+    __version__ = "0.1.2+source"
 
 # Load the extension before importing any kernel adapters.
 from . import _ops as _ops
@@ -100,6 +100,8 @@ _install_public_operations(ops)
 
 __all__ = [
     "__version__",
+    "ForwardMessages",
+    "forward_messages",
     "sw",
     "sw_value",
     "sw_entropy",
@@ -147,3 +149,5 @@ __all__ = [
     "nn",
     "ops",
 ]
+
+from .messages import ForwardMessages, forward_messages

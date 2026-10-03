@@ -63,6 +63,7 @@ SOURCE_READMES = tuple(
         "damerau",
         "dtw",
         "eisner",
+        "forward_messages",
         "lcs",
         "lev",
         "mas",
