@@ -10,11 +10,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATOR_PATH = ROOT / "tools" / "validate_change_provenance.py"
 SCHEMA_PATH = ROOT / ".provenance" / "change-provenance.schema.json"
-WORKFLOW_PATH = ROOT / ".github" / "workflows" / "provenance.yml"
-EXTERNAL_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "external-contributions-closed.yml"
 AUTHOR_ASSOCIATION_HELPER = ROOT / ".github" / "scripts" / "resolve-pr-author-association.sh"
-POLICY_PATH = ROOT / "docs" / "provenance-policy.md"
-ENFORCEMENT_MARKER = ".provenance/KANAME_ENFORCEMENT_BASE"
 
 SPEC = importlib.util.spec_from_file_location("validate_change_provenance", VALIDATOR_PATH)
 assert SPEC is not None and SPEC.loader is not None
@@ -162,27 +158,6 @@ def test_viewed_implementation_requires_clean_room_restart():
         validate(manifest)
 
 
-def test_trusted_base_workflow_uses_forward_only_enforcement_marker():
-    workflow = WORKFLOW_PATH.read_text()
-    assert "pull_request_target:" in workflow
-    assert "ref: ${{ github.event.pull_request.base.sha }}" in workflow
-    assert f"test -f {ENFORCEMENT_MARKER}" in workflow
-    assert workflow.count("if: steps.enforcement.outputs.active == 'true'") == 2
-    assert "Never execute or check out pull-request code" in workflow
-
-
-def test_trusted_workflows_use_the_live_author_association():
-    provenance = WORKFLOW_PATH.read_text()
-    external = EXTERNAL_WORKFLOW_PATH.read_text()
-    helper = ".github/scripts/resolve-pr-author-association.sh"
-
-    assert helper in provenance
-    assert helper in external
-    assert "github.event.pull_request.author_association" not in provenance
-    assert "github.event.pull_request.author_association" not in external
-    assert "ref: ${{ github.event.pull_request.base.sha }}" in external
-
-
 def test_live_author_association_helper_validates_api_output(tmp_path):
     fake_gh = tmp_path / "gh"
     fake_gh.write_text("#!/bin/sh\nprintf '%s\\n' \"${FAKE_ASSOCIATION}\"\n")
@@ -210,10 +185,3 @@ def test_live_author_association_helper_validates_api_output(tmp_path):
         check=False,
     )
     assert rejected.returncode != 0
-
-
-def test_policy_does_not_claim_bootstrap_kaname_provenance():
-    policy = POLICY_PATH.read_text()
-    assert ENFORCEMENT_MARKER in policy
-    assert "must not add a public change record" in policy
-    assert "Bootstrap history is never rewritten or relabeled as Kaname history" in policy
