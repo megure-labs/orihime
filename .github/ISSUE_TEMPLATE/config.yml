@@ -3,6 +3,6 @@ contact_links:
   - name: Security vulnerability
     url: https://github.com/megure-labs/orihime/security/advisories/new
     about: Report security issues privately.
-  - name: Provenance trace request
+  - name: Historical provenance request
     url: mailto:casey@megure.ai
-    about: Request the private Kaname provenance traces for a release.
+    about: Request available historical records; access is reviewed case by case.

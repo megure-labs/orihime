@@ -45,8 +45,9 @@ custom HIP target selection.
 Public GitHub CI builds and runs the complete CPU test suite on Linux x86-64
 and Apple Silicon. It does not claim GPU execution. NVIDIA CUDA and AMD HIP are
 validated offline on Megure-controlled hardware, and GPU-affecting pull
-requests must bind those results into their Kaname-compatible provenance
-record. See [Change provenance and merge policy](provenance-policy.md).
+requests must report those validation commands, hardware, and results.
+Kaname capture is optional. See the
+[public contribution and provenance policy](provenance-policy.md).
 
 ## Artifact identity
 

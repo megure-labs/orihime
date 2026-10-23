@@ -182,15 +182,10 @@ use Orihime in your research, please cite it:
 
 ## Contributing and provenance
 
-Admission is actor-neutral. Human-written and agent-written changes are subject
-to the same provenance, clean-room, licensing, validation, and admission
-requirements. Maintainer authority can authorize work, but it does not exempt a
-change from those requirements.
-
-External contributions are temporarily closed until Megure Labs deploys the
-Kaname verifier. Forking and downstream modification remain permitted under
-Apache-2.0. See [CONTRIBUTING.md](CONTRIBUTING.md) for the admission policy and
-[PROVENANCE.md](PROVENANCE.md) for the release history and trace policy.
+Public contributions are welcome under the same licensing, clean-room,
+validation, and review requirements for human-written and agent-assisted work.
+Kaname capture is optional. See [CONTRIBUTING.md](CONTRIBUTING.md) and
+[PROVENANCE.md](PROVENANCE.md) for contribution guidance and historical evidence.
 
 ## License
 
