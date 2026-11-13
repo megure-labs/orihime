@@ -19,13 +19,17 @@ jobs:
       - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
+            function closesFence(line,fence) {
+              const marker=/^ {0,3}(`{3,}|~{3,})\s*$/.exec(line);
+              return Boolean(marker&&marker[1][0]===fence.char&&marker[1].length>=fence.length);
+            }
             function visibleMarkdown(body) {
               const text=body||'';let result='',fence=null;
               for(let i=0;i<text.length;) {
                 if(i===0||text[i-1]==='\n') {
                   const end=text.indexOf('\n',i),stop=end<0?text.length:end+1,line=text.slice(i,stop);
                   if(fence) {
-                    if(new RegExp('^ {0,3}'+fence.char+'{'+fence.length+',}\\s*$').test(line))fence=null;
+                    if(closesFence(line,fence))fence=null;
                     result+=line;i=stop;continue;
                   }
                   const start=/^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line.trimEnd());
@@ -55,8 +59,7 @@ jobs:
               const sections=new Map();let active=null,fence=null;
               for(const line of text.split(/\r?\n/)) {
                 if(fence) {
-                  const end=new RegExp('^ {0,3}'+fence.char+'{'+fence.length+',}\\s*$');
-                  if(end.test(line))fence=null;
+                  if(closesFence(line,fence))fence=null;
                   else if(active&&line.trim())sections.get(active).push('[nonempty code block]');
                   continue;
                 }
