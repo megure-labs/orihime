@@ -1,0 +1,364 @@
+{
+  "source": "GitHub REST POST /markdown; mode=gfm; synthetic data only; 2026-11-13",
+  "cases": [
+    {
+      "name": "ordinary disclosures",
+      "markdown": "## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>A factual answer.</p>\n<h2>Human contribution</h2>\n<p>A factual answer.</p>\n<h2>Agent contribution</h2>\n<p>A factual answer.</p>\n<h2>External sources</h2>\n<p>A factual answer.</p>\n<h2>Validation</h2>\n<p>A factual answer.</p>"
+    },
+    {
+      "name": "no-agent and no-source answers",
+      "markdown": "## Summary\n\nNone\n\n## Human contribution\n\nNone\n\n## Agent contribution\n\nNone\n\n## External sources\n\nNone\n\n## Validation\n\nNone",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>None</p>\n<h2>Human contribution</h2>\n<p>None</p>\n<h2>Agent contribution</h2>\n<p>None</p>\n<h2>External sources</h2>\n<p>None</p>\n<h2>Validation</h2>\n<p>None</p>"
+    },
+    {
+      "name": "empty",
+      "markdown": "## Summary\n\n\n\n## Human contribution\n\n\n\n## Agent contribution\n\n\n\n## External sources\n\n\n\n## Validation\n\n",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<h2>Human contribution</h2>\n<h2>Agent contribution</h2>\n<h2>External sources</h2>\n<h2>Validation</h2>"
+    },
+    {
+      "name": "placeholder",
+      "markdown": "## Summary\n\nTODO\n\n## Human contribution\n\nTODO\n\n## Agent contribution\n\nTODO\n\n## External sources\n\nTODO\n\n## Validation\n\nTODO",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<p>TODO</p>\n<h2>Human contribution</h2>\n<p>TODO</p>\n<h2>Agent contribution</h2>\n<p>TODO</p>\n<h2>External sources</h2>\n<p>TODO</p>\n<h2>Validation</h2>\n<p>TODO</p>"
+    },
+    {
+      "name": "unfilled-template",
+      "markdown": "## Summary\n\nDescribe the change and why it is needed.\n\n## Human contribution\n\nDescribe the change and why it is needed.\n\n## Agent contribution\n\nDescribe the change and why it is needed.\n\n## External sources\n\nDescribe the change and why it is needed.\n\n## Validation\n\nDescribe the change and why it is needed.",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<p>Describe the change and why it is needed.</p>\n<h2>Human contribution</h2>\n<p>Describe the change and why it is needed.</p>\n<h2>Agent contribution</h2>\n<p>Describe the change and why it is needed.</p>\n<h2>External sources</h2>\n<p>Describe the change and why it is needed.</p>\n<h2>Validation</h2>\n<p>Describe the change and why it is needed.</p>"
+    },
+    {
+      "name": "reference-only",
+      "markdown": "## Summary\n\n[hidden]: /unused\n\n## Human contribution\n\n[hidden]: /unused\n\n## Agent contribution\n\n[hidden]: /unused\n\n## External sources\n\n[hidden]: /unused\n\n## Validation\n\n[hidden]: /unused",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<h2>Human contribution</h2>\n<h2>Agent contribution</h2>\n<h2>External sources</h2>\n<h2>Validation</h2>"
+    },
+    {
+      "name": "multiline-reference",
+      "markdown": "## Summary\n\n[hidden\nlabel]: /unused\n\n## Human contribution\n\n[hidden\nlabel]: /unused\n\n## Agent contribution\n\n[hidden\nlabel]: /unused\n\n## External sources\n\n[hidden\nlabel]: /unused\n\n## Validation\n\n[hidden\nlabel]: /unused",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<h2>Human contribution</h2>\n<h2>Agent contribution</h2>\n<h2>External sources</h2>\n<h2>Validation</h2>"
+    },
+    {
+      "name": "reference-title",
+      "markdown": "## Summary\n\n[hidden]: /unused\n \"Multi\nline title\"\n\n## Human contribution\n\n[hidden]: /unused\n \"Multi\nline title\"\n\n## Agent contribution\n\n[hidden]: /unused\n \"Multi\nline title\"\n\n## External sources\n\n[hidden]: /unused\n \"Multi\nline title\"\n\n## Validation\n\n[hidden]: /unused\n \"Multi\nline title\"",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<h2>Human contribution</h2>\n<h2>Agent contribution</h2>\n<h2>External sources</h2>\n<h2>Validation</h2>"
+    },
+    {
+      "name": "empty-list",
+      "markdown": "## Summary\n\n-\n\n## Human contribution\n\n-\n\n## Agent contribution\n\n-\n\n## External sources\n\n-\n\n## Validation\n\n-",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<ul>\n<li></li>\n</ul>\n<h2>Human contribution</h2>\n<ul>\n<li></li>\n</ul>\n<h2>Agent contribution</h2>\n<ul>\n<li></li>\n</ul>\n<h2>External sources</h2>\n<ul>\n<li></li>\n</ul>\n<h2>Validation</h2>\n<ul>\n<li></li>\n</ul>"
+    },
+    {
+      "name": "empty-quote",
+      "markdown": "## Summary\n\n>\n\n## Human contribution\n\n>\n\n## Agent contribution\n\n>\n\n## External sources\n\n>\n\n## Validation\n\n>",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<blockquote>\n</blockquote>\n<h2>Human contribution</h2>\n<blockquote>\n</blockquote>\n<h2>Agent contribution</h2>\n<blockquote>\n</blockquote>\n<h2>External sources</h2>\n<blockquote>\n</blockquote>\n<h2>Validation</h2>\n<blockquote>\n</blockquote>"
+    },
+    {
+      "name": "empty-fence",
+      "markdown": "## Summary\n\n```text\n\n```\n\n## Human contribution\n\n```text\n\n```\n\n## Agent contribution\n\n```text\n\n```\n\n## External sources\n\n```text\n\n```\n\n## Validation\n\n```text\n\n```",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">\n</code></pre>\n<h2>Human contribution</h2>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">\n</code></pre>\n<h2>Agent contribution</h2>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">\n</code></pre>\n<h2>External sources</h2>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">\n</code></pre>\n<h2>Validation</h2>\n<pre lang=\"text\" class=\"notranslate\"><code class=\"notranslate\">\n</code></pre>"
+    },
+    {
+      "name": "comment-only",
+      "markdown": "## Summary\n\n<!-- hidden -->\n\n## Human contribution\n\n<!-- hidden -->\n\n## Agent contribution\n\n<!-- hidden -->\n\n## External sources\n\n<!-- hidden -->\n\n## Validation\n\n<!-- hidden -->",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n\n<h2>Human contribution</h2>\n\n<h2>Agent contribution</h2>\n\n<h2>External sources</h2>\n\n<h2>Validation</h2>\n"
+    },
+    {
+      "name": "whitespace-entity",
+      "markdown": "## Summary\n\n&emsp;\n\n## Human contribution\n\n&emsp;\n\n## Agent contribution\n\n&emsp;\n\n## External sources\n\n&emsp;\n\n## Validation\n\n&emsp;",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<p>\u2003</p>\n<h2>Human contribution</h2>\n<p>\u2003</p>\n<h2>Agent contribution</h2>\n<p>\u2003</p>\n<h2>External sources</h2>\n<p>\u2003</p>\n<h2>Validation</h2>\n<p>\u2003</p>"
+    },
+    {
+      "name": "zero-width-entity",
+      "markdown": "## Summary\n\n&#8203;\n\n## Human contribution\n\n&#8203;\n\n## Agent contribution\n\n&#8203;\n\n## External sources\n\n&#8203;\n\n## Validation\n\n&#8203;",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<p>\u200b</p>\n<h2>Human contribution</h2>\n<p>\u200b</p>\n<h2>Agent contribution</h2>\n<p>\u200b</p>\n<h2>External sources</h2>\n<p>\u200b</p>\n<h2>Validation</h2>\n<p>\u200b</p>"
+    },
+    {
+      "name": "image-only",
+      "markdown": "## Summary\n\n![test image](https://example.org/test.png)\n\n## Human contribution\n\n![test image](https://example.org/test.png)\n\n## Agent contribution\n\n![test image](https://example.org/test.png)\n\n## External sources\n\n![test image](https://example.org/test.png)\n\n## Validation\n\n![test image](https://example.org/test.png)",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\"><img src=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\" alt=\"test image\" data-canonical-src=\"https://example.org/test.png\" style=\"max-width: 100%;\"></a></p>\n<h2>Human contribution</h2>\n<p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\"><img src=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\" alt=\"test image\" data-canonical-src=\"https://example.org/test.png\" style=\"max-width: 100%;\"></a></p>\n<h2>Agent contribution</h2>\n<p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\"><img src=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\" alt=\"test image\" data-canonical-src=\"https://example.org/test.png\" style=\"max-width: 100%;\"></a></p>\n<h2>External sources</h2>\n<p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\"><img src=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\" alt=\"test image\" data-canonical-src=\"https://example.org/test.png\" style=\"max-width: 100%;\"></a></p>\n<h2>Validation</h2>\n<p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\"><img src=\"https://camo.githubusercontent.com/f8769596787c84cf6fd3dd1446ba5096834f725f3c740f92be0e67e4888a3d84/68747470733a2f2f6578616d706c652e6f72672f746573742e706e67\" alt=\"test image\" data-canonical-src=\"https://example.org/test.png\" style=\"max-width: 100%;\"></a></p>"
+    },
+    {
+      "name": "all-hidden",
+      "markdown": "<!--\n## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.\n-->",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": ""
+    },
+    {
+      "name": "unclosed-comment",
+      "markdown": "<!--\n## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": ""
+    },
+    {
+      "name": "fenced-headings",
+      "markdown": "```markdown\n## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.\n```",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<div class=\"highlight highlight-text-md\"><pre class=\"notranslate\"><span class=\"pl-mh\">## <span class=\"pl-en\">Summary</span></span>\n\nA factual answer.\n\n<span class=\"pl-mh\">## <span class=\"pl-en\">Human contribution</span></span>\n\nA factual answer.\n\n<span class=\"pl-mh\">## <span class=\"pl-en\">Agent contribution</span></span>\n\nA factual answer.\n\n<span class=\"pl-mh\">## <span class=\"pl-en\">External sources</span></span>\n\nA factual answer.\n\n<span class=\"pl-mh\">## <span class=\"pl-en\">Validation</span></span>\n\nA factual answer.</pre></div>"
+    },
+    {
+      "name": "long-fence",
+      "markdown": "````markdown\n```\n## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.\n````",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<div class=\"highlight highlight-text-md\"><pre class=\"notranslate\"><span class=\"pl-s\">```</span><span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">## Summary</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">A factual answer.</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">## Human contribution</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">A factual answer.</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">## Agent contribution</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">A factual answer.</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">## External sources</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">A factual answer.</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">## Validation</span>\n<span class=\"pl-c1\"></span>\n<span class=\"pl-c1\">A factual answer.</span></pre></div>"
+    },
+    {
+      "name": "escaped-headings",
+      "markdown": "\\## Summary\n\nA factual answer.\n\n\\## Human contribution\n\nA factual answer.\n\n\\## Agent contribution\n\nA factual answer.\n\n\\## External sources\n\nA factual answer.\n\n\\## Validation\n\nA factual answer.",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<p>## Summary</p>\n<p>A factual answer.</p>\n<p>## Human contribution</p>\n<p>A factual answer.</p>\n<p>## Agent contribution</p>\n<p>A factual answer.</p>\n<p>## External sources</p>\n<p>A factual answer.</p>\n<p>## Validation</p>\n<p>A factual answer.</p>"
+    },
+    {
+      "name": "emphasized-headings",
+      "markdown": "## Summary\n\nA factual answer.\n\n## **Human contribution**\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>A factual answer.</p>\n<h2><strong>Human contribution</strong></h2>\n<p>A factual answer.</p>\n<h2>Agent contribution</h2>\n<p>A factual answer.</p>\n<h2>External sources</h2>\n<p>A factual answer.</p>\n<h2>Validation</h2>\n<p>A factual answer.</p>"
+    },
+    {
+      "name": "entity-heading",
+      "markdown": "## Summary\n\nA factual answer.\n\n## Human&#32;contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>A factual answer.</p>\n<h2>Human contribution</h2>\n<p>A factual answer.</p>\n<h2>Agent contribution</h2>\n<p>A factual answer.</p>\n<h2>External sources</h2>\n<p>A factual answer.</p>\n<h2>Validation</h2>\n<p>A factual answer.</p>"
+    },
+    {
+      "name": "setext-headings",
+      "markdown": "Summary\n---\n\nA factual answer.\n\nHuman contribution\n---\n\nA factual answer.\n\nAgent contribution\n---\n\nA factual answer.\n\nExternal sources\n---\n\nA factual answer.\n\nValidation\n---\n\nA factual answer.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>A factual answer.</p>\n<h2>Human contribution</h2>\n<p>A factual answer.</p>\n<h2>Agent contribution</h2>\n<p>A factual answer.</p>\n<h2>External sources</h2>\n<p>A factual answer.</p>\n<h2>Validation</h2>\n<p>A factual answer.</p>"
+    },
+    {
+      "name": "literal-inline-comment",
+      "markdown": "## Summary\n\nDocument the literal `<!--` token.\n\n## Human contribution\n\nDocument the literal `<!--` token.\n\n## Agent contribution\n\nDocument the literal `<!--` token.\n\n## External sources\n\nDocument the literal `<!--` token.\n\n## Validation\n\nDocument the literal `<!--` token.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>Document the literal <code class=\"notranslate\">&lt;!--</code> token.</p>\n<h2>Human contribution</h2>\n<p>Document the literal <code class=\"notranslate\">&lt;!--</code> token.</p>\n<h2>Agent contribution</h2>\n<p>Document the literal <code class=\"notranslate\">&lt;!--</code> token.</p>\n<h2>External sources</h2>\n<p>Document the literal <code class=\"notranslate\">&lt;!--</code> token.</p>\n<h2>Validation</h2>\n<p>Document the literal <code class=\"notranslate\">&lt;!--</code> token.</p>"
+    },
+    {
+      "name": "literal-fenced-comment",
+      "markdown": "## Summary\n\n```html\n<!-- unfinished example\n```\n\n## Human contribution\n\n```html\n<!-- unfinished example\n```\n\n## Agent contribution\n\n```html\n<!-- unfinished example\n```\n\n## External sources\n\n```html\n<!-- unfinished example\n```\n\n## Validation\n\n```html\n<!-- unfinished example\n```",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<div class=\"highlight highlight-text-html-basic\"><pre class=\"notranslate\">&lt;!-- unfinished example</pre></div>\n<h2>Human contribution</h2>\n<div class=\"highlight highlight-text-html-basic\"><pre class=\"notranslate\">&lt;!-- unfinished example</pre></div>\n<h2>Agent contribution</h2>\n<div class=\"highlight highlight-text-html-basic\"><pre class=\"notranslate\">&lt;!-- unfinished example</pre></div>\n<h2>External sources</h2>\n<div class=\"highlight highlight-text-html-basic\"><pre class=\"notranslate\">&lt;!-- unfinished example</pre></div>\n<h2>Validation</h2>\n<div class=\"highlight highlight-text-html-basic\"><pre class=\"notranslate\">&lt;!-- unfinished example</pre></div>"
+    },
+    {
+      "name": "closing-comment-extension",
+      "markdown": "<!-- ignored --!>\n## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "\n## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer."
+    },
+    {
+      "name": "unmatched-inline-code",
+      "markdown": "`\n\n<!--\n## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\nA factual answer.\n-->\n\n`",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<p>`</p>\n\n<p>`</p>"
+    },
+    {
+      "name": "multiline-code",
+      "markdown": "## Summary\n\nThe `literal\n<!-- token` is documented.\n\n## Human contribution\n\nThe `literal\n<!-- token` is documented.\n\n## Agent contribution\n\nThe `literal\n<!-- token` is documented.\n\n## External sources\n\nThe `literal\n<!-- token` is documented.\n\n## Validation\n\nThe `literal\n<!-- token` is documented.",
+      "missing": [
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<p>The `literal</p>\n"
+    },
+    {
+      "name": "visible-prose-after-reference",
+      "markdown": "## Summary\n\n[hidden]: /unused\n\nThis explains the change.\n\n## Human contribution\n\n[hidden]: /unused\n\nThis explains the change.\n\n## Agent contribution\n\n[hidden]: /unused\n\nThis explains the change.\n\n## External sources\n\n[hidden]: /unused\n\nThis explains the change.\n\n## Validation\n\n[hidden]: /unused\n\nThis explains the change.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>This explains the change.</p>\n<h2>Human contribution</h2>\n<p>This explains the change.</p>\n<h2>Agent contribution</h2>\n<p>This explains the change.</p>\n<h2>External sources</h2>\n<p>This explains the change.</p>\n<h2>Validation</h2>\n<p>This explains the change.</p>"
+    },
+    {
+      "name": "ordinary-prose-with-template-verb",
+      "markdown": "## Summary\n\nDescribe the new behavior in the help output.\n\n## Human contribution\n\nDescribe the new behavior in the help output.\n\n## Agent contribution\n\nDescribe the new behavior in the help output.\n\n## External sources\n\nDescribe the new behavior in the help output.\n\n## Validation\n\nDescribe the new behavior in the help output.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>Describe the new behavior in the help output.</p>\n<h2>Human contribution</h2>\n<p>Describe the new behavior in the help output.</p>\n<h2>Agent contribution</h2>\n<p>Describe the new behavior in the help output.</p>\n<h2>External sources</h2>\n<p>Describe the new behavior in the help output.</p>\n<h2>Validation</h2>\n<p>Describe the new behavior in the help output.</p>"
+    },
+    {
+      "name": "list-disclosures",
+      "markdown": "## Summary\n\n- A factual answer.\n\n## Human contribution\n\n- A factual answer.\n\n## Agent contribution\n\n- A factual answer.\n\n## External sources\n\n- A factual answer.\n\n## Validation\n\n- A factual answer.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<ul>\n<li>A factual answer.</li>\n</ul>\n<h2>Human contribution</h2>\n<ul>\n<li>A factual answer.</li>\n</ul>\n<h2>Agent contribution</h2>\n<ul>\n<li>A factual answer.</li>\n</ul>\n<h2>External sources</h2>\n<ul>\n<li>A factual answer.</li>\n</ul>\n<h2>Validation</h2>\n<ul>\n<li>A factual answer.</li>\n</ul>"
+    },
+    {
+      "name": "quoted-disclosures",
+      "markdown": "## Summary\n\n> A factual answer.\n\n## Human contribution\n\n> A factual answer.\n\n## Agent contribution\n\n> A factual answer.\n\n## External sources\n\n> A factual answer.\n\n## Validation\n\n> A factual answer.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<blockquote>\n<p>A factual answer.</p>\n</blockquote>\n<h2>Human contribution</h2>\n<blockquote>\n<p>A factual answer.</p>\n</blockquote>\n<h2>Agent contribution</h2>\n<blockquote>\n<p>A factual answer.</p>\n</blockquote>\n<h2>External sources</h2>\n<blockquote>\n<p>A factual answer.</p>\n</blockquote>\n<h2>Validation</h2>\n<blockquote>\n<p>A factual answer.</p>\n</blockquote>"
+    },
+    {
+      "name": "commands-in-validation",
+      "markdown": "## Summary\n\nA factual answer.\n\n## Human contribution\n\nA factual answer.\n\n## Agent contribution\n\nA factual answer.\n\n## External sources\n\nA factual answer.\n\n## Validation\n\n```sh\nnpm test # passed\n```",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>A factual answer.</p>\n<h2>Human contribution</h2>\n<p>A factual answer.</p>\n<h2>Agent contribution</h2>\n<p>A factual answer.</p>\n<h2>External sources</h2>\n<p>A factual answer.</p>\n<h2>Validation</h2>\n<div class=\"highlight highlight-source-shell\"><pre class=\"notranslate\">npm <span class=\"pl-c1\">test</span> <span class=\"pl-c\"><span class=\"pl-c\">#</span> passed</span></pre></div>"
+    },
+    {
+      "name": "literal-shell-and-python",
+      "markdown": "## Summary\n\n`$(touch /never-run)` and `__import__(\"os\")` are literal examples.\n\n## Human contribution\n\n`$(touch /never-run)` and `__import__(\"os\")` are literal examples.\n\n## Agent contribution\n\n`$(touch /never-run)` and `__import__(\"os\")` are literal examples.\n\n## External sources\n\n`$(touch /never-run)` and `__import__(\"os\")` are literal examples.\n\n## Validation\n\n`$(touch /never-run)` and `__import__(\"os\")` are literal examples.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p><code class=\"notranslate\">$(touch /never-run)</code> and <code class=\"notranslate\">__import__(\"os\")</code> are literal examples.</p>\n<h2>Human contribution</h2>\n<p><code class=\"notranslate\">$(touch /never-run)</code> and <code class=\"notranslate\">__import__(\"os\")</code> are literal examples.</p>\n<h2>Agent contribution</h2>\n<p><code class=\"notranslate\">$(touch /never-run)</code> and <code class=\"notranslate\">__import__(\"os\")</code> are literal examples.</p>\n<h2>External sources</h2>\n<p><code class=\"notranslate\">$(touch /never-run)</code> and <code class=\"notranslate\">__import__(\"os\")</code> are literal examples.</p>\n<h2>Validation</h2>\n<p><code class=\"notranslate\">$(touch /never-run)</code> and <code class=\"notranslate\">__import__(\"os\")</code> are literal examples.</p>"
+    },
+    {
+      "name": "empty-table",
+      "markdown": "## Summary\n\n| | |\n| - | - |\n| | |\n\n## Human contribution\n\n| | |\n| - | - |\n| | |\n\n## Agent contribution\n\n| | |\n| - | - |\n| | |\n\n## External sources\n\n| | |\n| - | - |\n| | |\n\n## Validation\n\n| | |\n| - | - |\n| | |",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ],
+      "html": "<h2>Summary</h2>\n<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th></th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>\n<h2>Human contribution</h2>\n<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th></th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>\n<h2>Agent contribution</h2>\n<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th></th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>\n<h2>External sources</h2>\n<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th></th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>\n<h2>Validation</h2>\n<markdown-accessiblity-table><table role=\"table\">\n<thead>\n<tr>\n<th></th>\n<th></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td></td>\n<td></td>\n</tr>\n</tbody>\n</table></markdown-accessiblity-table>"
+    },
+    {
+      "name": "line-endings",
+      "markdown": "## Summary\r\n\r\nA factual answer.\r\n\r\n## Human contribution\r\n\r\nA factual answer.\r\n\r\n## Agent contribution\r\n\r\nA factual answer.\r\n\r\n## External sources\r\n\r\nA factual answer.\r\n\r\n## Validation\r\n\r\nA factual answer.",
+      "missing": [],
+      "html": "<h2>Summary</h2>\n<p>A factual answer.</p>\n<h2>Human contribution</h2>\n<p>A factual answer.</p>\n<h2>Agent contribution</h2>\n<p>A factual answer.</p>\n<h2>External sources</h2>\n<p>A factual answer.</p>\n<h2>Validation</h2>\n<p>A factual answer.</p>"
+    },
+    {
+      "name": "actual-visible-template-prompts",
+      "markdown": "## Summary\n\nDescribe the problem and resulting behavior.\n\n## Human contribution\n\nIdentify the accountable human and their design, coding, review and validation work.\n\n## Agent contribution\n\nList each agent/tool/model when known, tasks, autonomy, and human verification. State None if unused.\n\n## External sources\n\nList code/reference URLs, exact revisions, licenses, affected files and how sources were used. State None if applicable.\n\n## Validation\n\nList exact commands, environments, results, and meaningful untested cases.\n",
+      "html": "<h2>Summary</h2>\n<p>Describe the problem and resulting behavior.</p>\n<h2>Human contribution</h2>\n<p>Identify the accountable human and their design, coding, review and validation work.</p>\n<h2>Agent contribution</h2>\n<p>List each agent/tool/model when known, tasks, autonomy, and human verification. State None if unused.</p>\n<h2>External sources</h2>\n<p>List code/reference URLs, exact revisions, licenses, affected files and how sources were used. State None if applicable.</p>\n<h2>Validation</h2>\n<p>List exact commands, environments, results, and meaningful untested cases.</p>",
+      "missing": [
+        "Summary",
+        "Human contribution",
+        "Agent contribution",
+        "External sources",
+        "Validation"
+      ]
+    }
+  ]
+}
