@@ -37,9 +37,13 @@ jobs:
                 }
                 if(text[i]==='`') {
                   let stop=i+1;while(text[stop]==='`')stop++;
+                  // Inline code cannot span blank lines or a new Markdown block. An
+                  // unmatched opener must not make a later hidden comment appear visible.
+                  const boundary=/\r?\n[ \t]*\r?\n|\r?\n(?= {0,3}(?:#{1,6}\s|`{3,}|~{3,}|>|[-+*]\s|[0-9]+[.)]\s))/.exec(text.slice(stop));
+                  const limit=boundary?stop+boundary.index:text.length;
                   const ticks=text.slice(i,stop);let end=text.indexOf(ticks,stop);
-                  while(end>=0&&(text[end-1]==='`'||text[end+ticks.length]==='`'))end=text.indexOf(ticks,end+1);
-                  if(end>=0){result+=text.slice(i,end+ticks.length);i=end+ticks.length;continue;}
+                  while(end>=0&&end<limit&&(text[end-1]==='`'||text[end+ticks.length]==='`'))end=text.indexOf(ticks,end+1);
+                  if(end>=0&&end<limit){result+=text.slice(i,end+ticks.length);i=end+ticks.length;continue;}
                   result+=ticks;i=stop;continue;
                 }
                 result+=text[i++];
@@ -81,6 +85,15 @@ jobs:
               }
               throw Error('Too many open PRs; disclosure validation requires maintainer inspection.');
             }
+            async function latestDisclosureStatus(github,owner,repo,ref) {
+              for(let page=1;page<=10;page++) {
+                const {data,headers}=await github.rest.repos.listCommitStatusesForRef({owner,repo,ref,per_page:100,page});
+                const status=data.find(row=>row.context==='Contribution disclosure');
+                if(status)return status;
+                if(!headers.link?.includes('rel="next"'))return null;
+              }
+              throw Error('Disclosure status history exceeds the metadata bound.');
+            }
             async function checkDisclosure(github,context,core) {
               const {owner,repo}=context.repo;
               const heads=new Set(),target_url=`${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
@@ -94,16 +107,20 @@ jobs:
               await pending(context.payload?.pull_request?.head?.sha);
               await pending(context.payload?.before);
               const related=await openPulls(github,owner,repo);
-              for(const pr of related)await pending(pr.head?.sha);
               const {data:current}=await github.rest.pulls.get({owner,repo,pull_number:context.issue.number});
               await pending(current.head?.sha);
+              const invalidated=new Set(heads);
+              for(const pr of related)if(/^[0-9a-f]{40}$/.test(pr.head?.sha||''))heads.add(pr.head.sha);
               const pulls=[...related.filter(p=>p.number!==current.number),current];
               const errors=[];
               for(const sha of heads) {
                 const failures=incompletePulls(pulls,sha);
-                await github.rest.repos.createCommitStatus({owner,repo,sha,
-                  state:failures.length?'failure':'success',context:'Contribution disclosure',
-                  description:failures.length?('Complete disclosures in PRs: '+failures.map(p=>'#'+p.number).join(', ')).slice(0,140):'All open PRs at this head disclose authorship, sources and validation',target_url});
+                const state=failures.length?'failure':'success';
+                const description=failures.length?('Complete disclosures in PRs: '+failures.map(p=>'#'+p.number).join(', ')).slice(0,140):'All open PRs at this head disclose authorship, sources and validation';
+                // Reconstruct skipped-event state without appending two statuses to every
+                // unchanged head on every event (GitHub caps each SHA/context at 1,000).
+                const previous=invalidated.has(sha)?null:await latestDisclosureStatus(github,owner,repo,sha);
+                if(!previous||previous.state!==state||previous.description!==description)await github.rest.repos.createCommitStatus({owner,repo,sha,state,context:'Contribution disclosure',description,target_url});
                 if(sha===current.head?.sha)errors.push(...failures.map(p=>'#'+p.number+': '+p.missing.join(', ')));
               }
               if(errors.length)core.setFailed([...new Set(errors)].join('\n'));
