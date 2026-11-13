@@ -32,14 +32,14 @@ jobs:
                   if(start){fence={char:start[1][0],length:start[1].length};result+=line;i=stop;continue;}
                 }
                 if(text.startsWith('<!--',i)) {
-                  const end=text.indexOf('-->',i+4),stop=end<0?text.length:end+3;
+                  const end=/--!?>/.exec(text.slice(i+4)),stop=end?i+4+end.index+end[0].length:text.length;
                   result+=text.slice(i,stop).replace(/[^\n]/g,'');i=stop;continue;
                 }
                 if(text[i]==='`') {
                   let stop=i+1;while(text[stop]==='`')stop++;
                   // Inline code cannot span blank lines or a new Markdown block. An
                   // unmatched opener must not make a later hidden comment appear visible.
-                  const boundary=/\r?\n[ \t]*\r?\n|\r?\n(?= {0,3}(?:#{1,6}\s|`{3,}|~{3,}|>|[-+*]\s|[0-9]+[.)]\s))/.exec(text.slice(stop));
+                  const boundary=/\r?\n[ \t]*\r?\n|\r?\n(?= {0,3}(?:#{1,6}\s|`{3,}|~{3,}|>|[-+*]\s|1[.)]\s))/.exec(text.slice(stop));
                   const limit=boundary?stop+boundary.index:text.length;
                   const ticks=text.slice(i,stop);let end=text.indexOf(ticks,stop);
                   while(end>=0&&end<limit&&(text[end-1]==='`'||text[end+ticks.length]==='`'))end=text.indexOf(ticks,end+1);
