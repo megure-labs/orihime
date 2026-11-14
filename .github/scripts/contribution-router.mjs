@@ -79,11 +79,21 @@ export function planImport(files, publicBase, publicHead, devBase) {
   return changes;
 }
 export function validationPassed(checks, statuses, required=[], product=[]) {
+  // Raw status history retains producer identity; only the latest context counts.
+  const latest=new Map();
+  for(const s of statuses)if(!latest.has(s.context)||(s.id??0)>(latest.get(s.context).id??0))latest.set(s.context,s);
+  statuses=[...latest.values()];
   if (checks.some(c => c.status!=='completed' || !['success','neutral','skipped'].includes(c.conclusion))) return false;
   if (statuses.some(s => s.state!=='success')) return false;
-  const completed=new Set([...checks.filter(c=>c.conclusion==='success').map(c=>c.name),...statuses.filter(s=>s.state==='success').map(s=>s.context)]);
-  // Require every named product matrix entry to succeed, including non-required CI.
-  return product.length>0 && [...required,...product].every(name=>completed.has(name));
+  const runs=checks.filter(c=>c.conclusion==='success');
+  // Product tests must be actual Actions check runs, never similarly named statuses.
+  if(!product.length||!product.every(name=>runs.some(c=>c.name===name&&c.app?.id===15368)))return false;
+  return required.every(value=>{
+    const r=typeof value==='string'?{context:value}:value;
+    const any=r.integration_id==null||r.integration_id===-1;
+    return runs.some(c=>c.name===r.context&&(any||c.app?.id===r.integration_id))||
+      statuses.some(s=>s.context===r.context&&(any||(r.integration_id===15368&&s.creator?.login==='github-actions[bot]')));
+  });
 }
 
 async function existingRef(api,repo,branch) {
@@ -173,9 +183,9 @@ export async function promote(api,repo,number,appSlug){
   const changes=planImport(await api.pages(`repos/${m.source}/pulls/${m.pr}/files`),await api.tree(m.source,m.base),await api.tree(m.source,m.sha),await api.tree(repo,first.parents[0].sha));
   const checkResponse=await api.request(`repos/${repo}/commits/${pr.head.sha}/check-runs?per_page=100`);
   if(checkResponse.total_count>100)throw Error('Too many checks; manual verification required');
-  const statuses=(await api.request(`repos/${repo}/commits/${pr.head.sha}/status?per_page=100`)).statuses;
+  const statuses=await api.pages(`repos/${repo}/commits/${pr.head.sha}/statuses`);
   const rules=await api.request(`repos/${repo}/rules/branches/main`);
-  const required=rules.filter(r=>r.type==='required_status_checks').flatMap(r=>r.parameters.required_status_checks.map(c=>c.context));
+  const required=rules.filter(r=>r.type==='required_status_checks').flatMap(r=>r.parameters.required_status_checks);
   if(!validationPassed(checkResponse.check_runs,statuses,required,PRODUCT_CHECKS[repo]))throw Error('Completed product CI and every required check must pass');
   const finalTree=new Map((await api.tree(repo,pr.merge_commit_sha)).map(e=>[e.path,e]));
   const approvedTree=new Map((await api.tree(repo,pr.head.sha)).map(e=>[e.path,e]));

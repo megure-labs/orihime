@@ -33,7 +33,9 @@ approve/validate that new SHA. No private source or private PR URL is published.
 Concurrent public-base changes also require revalidation. Later development
 edits or merge changes anywhere in the imported tree require a manual port or
 updated public source and renewed validation. Every named product CI matrix
-entry must succeed; metadata checks and skipped product jobs cannot substitute.
+entry must succeed as an actual GitHub Actions check run; named commit statuses
+and skipped product jobs cannot substitute. Required-check producer IDs are
+preserved, and status history is reduced to each context's latest result.
 Retries verify and reuse existing refs/PRs and repair missing validation statuses.
 Conflicting refs are never overwritten; a moved private base during a partial
 import requires maintainer reconciliation.

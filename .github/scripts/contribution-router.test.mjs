@@ -30,7 +30,7 @@ test('only latest owner decision on exact SHA permits import',()=>{
   assert.equal(ownerApproved([approved,{...approved,id:2,state:'DISMISSED'}],next.sha),false);
 });
 test('product validation requires completed real CI and every required check',()=>{
-  const ci={name:'Scientific CPU tests',status:'completed',conclusion:'success'};
+  const ci={name:'Scientific CPU tests',status:'completed',conclusion:'success',app:{id:15368}};
   assert.equal(validationPassed([ci],[],['Scientific CPU tests'],['Scientific CPU tests']),true);
   assert.equal(validationPassed([ci],[],[],[]),false);
   assert.equal(validationPassed([{...ci,name:'Validate provenance'}],[],[],['Scientific CPU tests']),false);
@@ -89,6 +89,7 @@ function hostedFixture() {
    if(path===`repos/${PUBLIC}/pulls/7/reviews`)return approval(next.sha);
    if(path===`repos/${dev}/pulls/9/reviews`)return approval(head);
    if(path===`repos/${PUBLIC}/pulls/7/files`)return [file];
+   if(path===`repos/${dev}/commits/${head}/statuses`)return [{id:2,context:'Contribution disclosure',state:'success',creator:{login:'github-actions[bot]'}},{id:1,context:'Contribution disclosure',state:'pending',creator:{login:'github-actions[bot]'}}];
    if(path.startsWith(`repos/${dev}/pulls?`))return privatePR?[privatePR]:[];
    if(path.startsWith(`repos/${PUBLIC}/pulls?`))return publicPR?[publicPR]:[];
    if(path===`repos/${dev}/pulls/9/commits`)return [{sha:imported,parents:[{sha:base}],commit:{message:`Port approved contribution ${PUBLIC}#7\n\nSource-head: ${next.sha}\nSource-base: ${old.sha}\nOriginal-author: external-contributor`}}];
@@ -114,9 +115,8 @@ function hostedFixture() {
    if(path===`repos/${dev}/git/commits/${base}`)return {tree:{sha:base}};
    if(path===`repos/${dev}/git/commits/${head}`)return commitRecord;
    if(path===`repos/${dev}/pulls/9`)return privatePR;
-   if(path===`repos/${dev}/commits/${head}/check-runs?per_page=100`)return {total_count:PRODUCT_CHECKS[dev].length+1,check_runs:[...PRODUCT_CHECKS[dev].map(name=>({name,status:'completed',conclusion:'success'})),{name:'Validate contribution disclosure',status:'completed',conclusion:'success'}]};
-   if(path===`repos/${dev}/commits/${head}/status?per_page=100`)return {statuses:[]};
-   if(path===`repos/${dev}/rules/branches/main`)return [{type:'required_status_checks',parameters:{required_status_checks:[{context:'Validate contribution disclosure'}]}}];
+   if(path===`repos/${dev}/commits/${head}/check-runs?per_page=100`)return {total_count:PRODUCT_CHECKS[dev].length+1,check_runs:[...PRODUCT_CHECKS[dev].map(name=>({name,status:'completed',conclusion:'success',app:{id:15368}})),{name:'Validate contribution disclosure',status:'completed',conclusion:'success',app:{id:15368}}]};
+   if(path===`repos/${dev}/rules/branches/main`)return [{type:'required_status_checks',parameters:{required_status_checks:[{context:'Contribution disclosure',integration_id:15368}]}}];
    throw Error('Unexpected read: '+path);
   }
  };
@@ -174,4 +174,19 @@ test('a conflicting public retry branch is never overwritten',async()=>{
  const f=hostedFixture();await route(f.api,PUBLIC,7,'caseysm','router');f.completeDisclosure();
  f.refs.set(`repos/${PUBLIC}/git/ref/heads/validated/7-${next.sha.slice(0,16)}`,old.sha);
  const count=f.writes.length;await assert.rejects(promote(f.api,f.dev,9,'router'),/conflicts/);assert.equal(f.writes.length,count);
+});
+test('product validation rejects fabricated statuses and check runs from another app',()=>{
+ const ci={name:'Product tests',status:'completed',conclusion:'success',app:{id:15368}};
+ assert.equal(validationPassed([ci],[],[],[ci.name]),true);
+ assert.equal(validationPassed([{...ci,app:{id:999}}],[],[],[ci.name]),false);
+ assert.equal(validationPassed([],[{id:1,context:ci.name,state:'success',creator:{login:'github-actions[bot]'}}],[],[ci.name]),false);
+});
+test('required integration identity and latest status are preserved',()=>{
+ const ci={name:'Product tests',status:'completed',conclusion:'success',app:{id:15368}};
+ const required=[{context:'Contribution disclosure',integration_id:15368}];
+ const pending={id:1,context:'Contribution disclosure',state:'pending',creator:{login:'github-actions[bot]'}};
+ const passed={...pending,id:2,state:'success'};
+ assert.equal(validationPassed([ci],[pending,passed],required,[ci.name]),true);
+ assert.equal(validationPassed([ci],[{...passed,creator:{login:'another-app[bot]'}}],required,[ci.name]),false);
+ assert.equal(validationPassed([ci],[passed],required.map(r=>({...r,integration_id:999})),[ci.name]),false);
 });
