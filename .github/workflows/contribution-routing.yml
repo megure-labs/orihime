@@ -1,0 +1,46 @@
+name: Contribution routing
+on:
+  pull_request_target:
+    types: [labeled]
+permissions:
+  contents: read
+  pull-requests: read
+concurrency:
+  group: contribution-route-${{ github.repository }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+jobs:
+  route:
+    # Unconfigured routing is deliberately inactive. Never substitute a personal token.
+    if: >-
+      vars.CONTRIBUTION_ROUTER_APP_ID != '' &&
+      github.event.sender.login == 'caseysm' && github.event.label.name == 'route-to-dev'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      # Only the trusted base's router is checked out, never contributor code.
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+          sparse-checkout: .github/scripts/contribution-router.mjs
+          sparse-checkout-cone-mode: false
+      - name: Mint a short-lived token for this explicit repository pair
+        id: app
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
+        with:
+          app-id: ${{ vars.CONTRIBUTION_ROUTER_APP_ID }}
+          private-key: ${{ secrets.CONTRIBUTION_ROUTER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            orihime
+            orihime-dev
+          permission-contents: write
+          permission-pull-requests: write
+          permission-checks: read
+          permission-statuses: write
+      - name: Prepare owner-approved development pull request
+        env:
+          CONTRIBUTION_ROUTER_TOKEN: ${{ steps.app.outputs.token }}
+          CONTRIBUTION_ROUTER_APP_SLUG: ${{ vars.CONTRIBUTION_ROUTER_APP_SLUG }}
+          ROUTER_MODE: import
+        run: node .github/scripts/contribution-router.mjs
