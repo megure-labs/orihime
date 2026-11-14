@@ -30,8 +30,15 @@ Conflicts, renames, symlinks, submodules, files over 1 MiB, more than 100 files,
 or changes to automation/agent/policy paths require a manual maintainer port.
 If dev review changes the public patch, the owner must update the public PR and
 approve/validate that new SHA. No private source or private PR URL is published.
-Concurrent public-base changes also require revalidation. Idempotent branch names
-avoid creating duplicate PRs for the same source SHA.
+Concurrent public-base changes also require revalidation. Later development
+edits or merge changes anywhere in the imported tree require a manual port or
+updated public source and renewed validation. Every named product CI matrix
+entry must succeed as an actual GitHub Actions check run; named commit statuses
+and skipped product jobs cannot substitute. Required-check producer IDs are
+preserved, and status history is reduced to each context's latest result.
+Retries verify and reuse existing refs/PRs and repair missing validation statuses.
+Conflicting refs are never overwritten; a moved private base during a partial
+import requires maintainer reconciliation.
 
 ## Activation
 

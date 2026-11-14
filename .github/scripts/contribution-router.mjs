@@ -3,9 +3,10 @@ import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 
 export const PAIRS = Object.freeze({"megure-labs/orihime":"megure-labs/orihime-dev"});
+export const PRODUCT_CHECKS = Object.freeze({"megure-labs/orihime-dev":["Python 3.10 / PyTorch 2.9 / CPU","Python 3.11 / PyTorch 2.10 / CPU","Python 3.12 / PyTorch 2.11 / CPU","Python 3.13 / PyTorch 2.12 / CPU","Python 3.14 / PyTorch 2.13 / CPU","Apple Silicon / Python 3.13 / PyTorch 2.12 / CPU"]});
 const OWNER = 'caseysm';
 const SHA = /^[0-9a-f]{40}$/;
-const protectedPath = /^(?:\.github(?:\/|$)|\.agents(?:\/|$)|\.claude(?:\/|$)|AGENTS\.md$|CLAUDE\.md$|CONTRIBUTING\.md$|\.git(?:\/|$))/i;
+const protectedPath = /^(?:\.github(?:\/|$)|\.agents(?:\/|$)|\.claude(?:\/|$)|\.provenance(?:\/|$)|AGENTS\.md$|CLAUDE\.md$|CONTRIBUTING\.md$|PROVENANCE(?:_POLICY)?\.md$|CLEAN_ROOM\.md$|LICENSE(?:\.[^/]*)?$|NOTICE(?:\.[^/]*)?$|THIRD_PARTY_NOTICES\.md$|docs\/(?:provenance-policy|clean-room)\.md$|\.git(?:\/|$))/i;
 export function developmentBody(repo,pr,changes) {
   const metadata={source:repo,pr:pr.number,sha:pr.head.sha,base:pr.base.sha,changes};
   const original=(pr.body||'').slice(0,8000);
@@ -77,38 +78,68 @@ export function planImport(files, publicBase, publicHead, devBase) {
   }
   return changes;
 }
-export function validationPassed(checks, statuses, required=[]) {
+export function validationPassed(checks, statuses, required=[], product=[]) {
+  // Raw status history retains producer identity; only the latest context counts.
+  const latest=new Map();
+  for(const s of statuses)if(!latest.has(s.context)||(s.id??0)>(latest.get(s.context).id??0))latest.set(s.context,s);
+  statuses=[...latest.values()];
   if (checks.some(c => c.status!=='completed' || !['success','neutral','skipped'].includes(c.conclusion))) return false;
   if (statuses.some(s => s.state!=='success')) return false;
-  const completed=new Set([...checks.filter(c=>c.conclusion==='success').map(c=>c.name),...statuses.filter(s=>s.state==='success').map(s=>s.context)]);
-  if (!required.every(name=>completed.has(name))) return false;
-  // Metadata checks and bot review alone cannot establish product validation.
-  return [...completed].some(name=>!/(?:contribution disclosure|validate contribution disclosure|coderabbit|greptile)/i.test(name));
+  const runs=checks.filter(c=>c.conclusion==='success');
+  // Product tests must be actual Actions check runs, never similarly named statuses.
+  if(!product.length||!product.every(name=>runs.some(c=>c.name===name&&c.app?.id===15368)))return false;
+  return required.every(value=>{
+    const r=typeof value==='string'?{context:value}:value;
+    const any=r.integration_id==null||r.integration_id===-1;
+    return runs.some(c=>c.name===r.context&&(any||c.app?.id===r.integration_id))||
+      statuses.some(s=>s.context===r.context&&(any||(r.integration_id===15368&&s.creator?.login==='github-actions[bot]')));
+  });
+}
+
+async function existingRef(api,repo,branch) {
+  try{return await api.request(`repos/${repo}/git/ref/heads/${branch}`);}
+  catch(error){if(error.status===404)return null;throw error;}
+}
+const importMessage=(repo,pr)=>`Port approved contribution ${repo}#${pr.number}\n\nSource-head: ${pr.head.sha}\nSource-base: ${pr.base.sha}\nOriginal-author: ${pr.user.login}`;
+function binding(pr) {
+  const match=/<!-- contribution-router-v1 (.+) -->/.exec(pr.body||'');
+  if(!match)throw Error('Missing immutable source binding');return JSON.parse(match[1]);
 }
 
 class GitHub {
   constructor(token){if(!token)throw Error('Scoped router GitHub App token is not configured');this.token=token;}
   async request(path,method='GET',body){
     const response=await fetch('https://api.github.com/'+path,{method,headers:{Authorization:'Bearer '+this.token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},body:body===undefined?undefined:JSON.stringify(body)});
-    if(!response.ok)throw Error(`GitHub ${method} ${path.split('?')[0]} returned ${response.status}`);
+    if(!response.ok)throw Object.assign(Error(`GitHub ${method} ${path.split('?')[0]} returned ${response.status}`),{status:response.status});
     return response.status===204?null:response.json();
   }
   async pages(path){const all=[];for(let page=1;page<=100;page++){const rows=await this.request(path+(path.includes('?')?'&':'?')+'per_page=100&page='+page);if(!Array.isArray(rows))throw Error('Invalid paginated response');all.push(...rows);if(rows.length<100)return all;}throw Error('Pagination limit exceeded');}
   async tree(repo,sha){const result=await this.request(`repos/${repo}/git/trees/${sha}?recursive=1`);if(result.truncated)throw Error('Truncated tree requires a manual port');return result.tree;}
 }
 
-export async function route(api,repo,number,actor){
+export async function route(api,repo,number,actor,appSlug){
   if(actor!==OWNER)throw Error('Only the repository owner may request privileged routing');
+  if(!appSlug)throw Error('Scoped router App identity is not configured');
   const pr=await api.request(`repos/${repo}/pulls/${number}`);validateSource(repo,pr);
   if(!ownerApproved(await api.pages(`repos/${repo}/pulls/${number}/reviews`),pr.head.sha))throw Error('Owner approval is required for this exact source SHA');
   const dest=PAIRS[repo];const destInfo=await api.request(`repos/${dest}`);
   if(!destInfo.private || destInfo.default_branch!=='main')throw Error('Destination must be private with a main default');
+  const branch=`contribution/${number}-${pr.head.sha.slice(0,16)}`;
+  const prior=await api.pages(`repos/${dest}/pulls?state=all&head=${dest.split('/')[0]}:${branch}`);
+  if(prior.length){
+    const old=prior[0],m=binding(old);
+    if(prior.length!==1||old.user?.login!==appSlug+'[bot]'||old.head?.ref!==branch||old.base?.ref!=='main'||m.source!==repo||m.pr!==number||m.sha!==pr.head.sha||m.base!==pr.base.sha)throw Error('Existing development PR conflicts with this approved import');
+    const first=(await api.pages(`repos/${dest}/pulls/${old.number}/commits`))[0];
+    if(first?.commit?.message!==importMessage(repo,pr))throw Error('Existing development PR lacks immutable import provenance');
+    if(!old.merged){
+      if(old.state!=='open')throw Error('Development PR was closed without merging; maintainer intervention required');
+      await api.request(`repos/${repo}/statuses/${pr.head.sha}`,'POST',{state:'pending',context:'Development validation',description:'Owner-approved contribution is awaiting development validation'});
+    }
+    return {state:'already-routed',number:old.number};
+  }
   const devRef=await api.request(`repos/${dest}/git/ref/heads/main`);
   const [files,before,after,dev]=await Promise.all([api.pages(`repos/${repo}/pulls/${number}/files`),api.tree(repo,pr.base.sha),api.tree(repo,pr.head.sha),api.tree(dest,devRef.object.sha)]);
   const changes=planImport(files,before,after,dev);
-  const branch=`contribution/${number}-${pr.head.sha.slice(0,16)}`;
-  const prior=await api.pages(`repos/${dest}/pulls?state=all&head=${dest.split('/')[0]}:${branch}`);
-  if(prior.length)return {state:'already-routed',number:prior[0].number};
   // Re-read approval and head immediately before privileged writes.
   const fresh=await api.request(`repos/${repo}/pulls/${number}`);
   if(fresh.head.sha!==pr.head.sha || fresh.base.sha!==pr.base.sha || fresh.state!=='open' || !ownerApproved(await api.pages(`repos/${repo}/pulls/${number}/reviews`),pr.head.sha))throw Error('Source changed or approval withdrawn during routing');
@@ -124,8 +155,15 @@ export async function route(api,repo,number,actor){
   }
   const baseCommit=await api.request(`repos/${dest}/git/commits/${devRef.object.sha}`);
   const tree=await api.request(`repos/${dest}/git/trees`,'POST',{base_tree:baseCommit.tree.sha,tree:entries});
-  const commit=await api.request(`repos/${dest}/git/commits`,'POST',{message:`Port approved contribution ${repo}#${number}\n\nSource-head: ${pr.head.sha}\nSource-base: ${pr.base.sha}\nOriginal-author: ${pr.user.login}`,tree:tree.sha,parents:[devRef.object.sha]});
-  await api.request(`repos/${dest}/git/refs`,'POST',{ref:'refs/heads/'+branch,sha:commit.sha});
+  const ref=await existingRef(api,dest,branch);
+  let sha=ref?.object?.sha;
+  if(ref){
+    const old=await api.request(`repos/${dest}/git/commits/${sha}`);
+    if(old.tree.sha!==tree.sha||old.message!==importMessage(repo,pr)||old.parents.length!==1||old.parents[0].sha!==devRef.object.sha)throw Error('Existing import branch conflicts; never overwrite it');
+  }else{
+    const commit=await api.request(`repos/${dest}/git/commits`,'POST',{message:importMessage(repo,pr),tree:tree.sha,parents:[devRef.object.sha]});sha=commit.sha;
+    await api.request(`repos/${dest}/git/refs`,'POST',{ref:'refs/heads/'+branch,sha});
+  }
   const created=await api.request(`repos/${dest}/pulls`,'POST',{title:`Port ${repo}#${number}: ${pr.title}`.slice(0,240),head:branch,base:'main',body});
   await api.request(`repos/${repo}/statuses/${pr.head.sha}`,'POST',{state:'pending',context:'Development validation',description:'Owner-approved contribution is awaiting development validation'});
   return {state:'routed',number:created.number};
@@ -134,9 +172,7 @@ export async function route(api,repo,number,actor){
 export async function promote(api,repo,number,appSlug){
   const pr=await api.request(`repos/${repo}/pulls/${number}`);
   if(!appSlug || pr.user?.login!==appSlug+'[bot]' || !pr.merged || pr.base.ref!=='main')throw Error('Only a merged router-authored development PR can be promoted');
-  const match=/<!-- contribution-router-v1 (.+) -->/.exec(pr.body||'');
-  if(!match)throw Error('Missing immutable source binding');
-  const m=JSON.parse(match[1]);
+  const m=binding(pr);
   if(PAIRS[m.source]!==repo || !SHA.test(m.sha)||!SHA.test(m.base))throw Error('Invalid paired-repository binding');
   const source=await api.request(`repos/${m.source}/pulls/${m.pr}`);validateSource(m.source,source);
   if(source.head.sha!==m.sha || source.base.sha!==m.base)throw Error('Public source or base changed; reroute and validate the new revision');
@@ -147,12 +183,17 @@ export async function promote(api,repo,number,appSlug){
   const changes=planImport(await api.pages(`repos/${m.source}/pulls/${m.pr}/files`),await api.tree(m.source,m.base),await api.tree(m.source,m.sha),await api.tree(repo,first.parents[0].sha));
   const checkResponse=await api.request(`repos/${repo}/commits/${pr.head.sha}/check-runs?per_page=100`);
   if(checkResponse.total_count>100)throw Error('Too many checks; manual verification required');
-  const statuses=(await api.request(`repos/${repo}/commits/${pr.head.sha}/status?per_page=100`)).statuses;
+  const statuses=await api.pages(`repos/${repo}/commits/${pr.head.sha}/statuses`);
   const rules=await api.request(`repos/${repo}/rules/branches/main`);
-  const required=rules.filter(r=>r.type==='required_status_checks').flatMap(r=>r.parameters.required_status_checks.map(c=>c.context));
-  if(!validationPassed(checkResponse.check_runs,statuses,required))throw Error('Completed product CI and every required check must pass');
+  const required=rules.filter(r=>r.type==='required_status_checks').flatMap(r=>r.parameters.required_status_checks);
+  if(!validationPassed(checkResponse.check_runs,statuses,required,PRODUCT_CHECKS[repo]))throw Error('Completed product CI and every required check must pass');
   const finalTree=new Map((await api.tree(repo,pr.merge_commit_sha)).map(e=>[e.path,e]));
   const approvedTree=new Map((await api.tree(repo,pr.head.sha)).map(e=>[e.path,e]));
+  const importedTree=new Map((await api.tree(repo,first.sha)).map(e=>[e.path,e]));
+  for(const path of new Set([...importedTree.keys(),...approvedTree.keys(),...finalTree.keys()])){
+    const identity=tree=>{const e=tree.get(path);return e?[e.type,e.mode,e.sha].join(':'):null;};
+    if(identity(importedTree)!==identity(approvedTree)||identity(approvedTree)!==identity(finalTree))throw Error('Development review or merge changed the imported candidate; update the public source and revalidate');
+  }
   for(const c of changes){
     const expectedMode=c.after===null?null:c.mode;
     if([finalTree,approvedTree].some(tree=>(tree.get(c.path)?.sha??null)!==c.after || (tree.get(c.path)?.mode??null)!==expectedMode))throw Error('Development fixes differ from public source; a maintainer must update the public PR before promotion');
@@ -160,8 +201,15 @@ export async function promote(api,repo,number,appSlug){
   // Export only the original public tree; no private repository content leaves.
   const branch=`validated/${m.pr}-${m.sha.slice(0,16)}`;
   const existing=await api.pages(`repos/${m.source}/pulls?state=all&head=${m.source.split('/')[0]}:${branch}`);
-  if(existing.length)return {state:'already-promoted',number:existing[0].number};
-  await api.request(`repos/${m.source}/git/refs`,'POST',{ref:'refs/heads/'+branch,sha:m.sha});
+  if(existing.length){
+    const old=existing[0];
+    if(existing.length!==1||old.user?.login!==appSlug+'[bot]'||old.head?.ref!==branch||old.head?.sha!==m.sha||old.base?.ref!=='main')throw Error('Existing release PR conflicts with the approved public source');
+    await api.request(`repos/${m.source}/statuses/${m.sha}`,'POST',{state:'success',context:'Development validation',description:'Exact approved contribution passed development validation'});
+    return {state:'already-promoted',number:old.number};
+  }
+  const ref=await existingRef(api,m.source,branch);
+  if(ref?.object?.sha!==undefined&&ref.object.sha!==m.sha)throw Error('Existing release branch conflicts; never overwrite it');
+  if(!ref)await api.request(`repos/${m.source}/git/refs`,'POST',{ref:'refs/heads/'+branch,sha:m.sha});
   const release=await api.request(`repos/${m.source}/pulls`,'POST',{title:`Validated contribution #${m.pr}: ${source.title}`.slice(0,240),head:branch,base:'main',body:releaseBody(source,m.sha)});
   await api.request(`repos/${m.source}/statuses/${m.sha}`,'POST',{state:'success',context:'Development validation',description:'Exact approved contribution passed development validation'});
   return {state:'release-pr-opened',number:release.number};
@@ -173,6 +221,6 @@ if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
   const repo=process.env.GITHUB_REPOSITORY;
   const result=process.env.ROUTER_MODE==='promote'
     ?await promote(api,repo,event.pull_request.number,process.env.CONTRIBUTION_ROUTER_APP_SLUG)
-    :await route(api,repo,event.pull_request.number,event.sender.login);
+    :await route(api,repo,event.pull_request.number,event.sender.login,process.env.CONTRIBUTION_ROUTER_APP_SLUG);
   console.log(JSON.stringify(result));
 }
