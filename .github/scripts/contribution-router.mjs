@@ -2,13 +2,53 @@
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 
-const namespace = process.env.GITHUB_REPOSITORY_OWNER || 'example';
-export const PAIRS = Object.freeze(Object.fromEntries(
-  ['orihime', 'hikoboshi'].map(name => [namespace + '/' + name, namespace + '/' + name + '-dev'])
-));
+export const PAIRS = Object.freeze({'megure-labs/orihime':'megure-labs/orihime-dev','orikata-bio/hikoboshi':'orikata-bio/hikoboshi-dev'});
 const OWNER = 'caseysm';
 const SHA = /^[0-9a-f]{40}$/;
 const protectedPath = /^(?:\.github(?:\/|$)|\.agents(?:\/|$)|\.claude(?:\/|$)|AGENTS\.md$|CLAUDE\.md$|CONTRIBUTING\.md$|\.git(?:\/|$))/i;
+export function developmentBody(repo,pr,changes) {
+  const metadata={source:repo,pr:pr.number,sha:pr.head.sha,base:pr.base.sha,changes};
+  const original=(pr.body||'').slice(0,8000);
+  const fence='`'.repeat(Math.max(2,...(original.match(/`+/g)||[]).map(s=>s.length))+1);
+  const body=`## Summary
+Port an owner-approved external contribution.
+
+## Human contribution
+${OWNER} approved source commit ${pr.head.sha}; original submission account: ${pr.user.login}.
+
+## Agent contribution
+TODO
+
+## External sources
+${pr.html_url} at ${pr.head.sha}. Preserve its license and notices.
+
+## Validation
+Product CI and exact-head maintainer approval are required here before promotion.
+
+## Import provenance
+GitHub App copied immutable blobs without executing contributor code. Complete the Agent contribution section with the original contribution's actual human/agent facts before merging; do not infer None. Full records stay in this private PR.
+
+<!-- contribution-router-v1 ${JSON.stringify(metadata)} -->
+
+### Original public submission (reference text; first 8000 characters)
+${fence}markdown
+${original}
+${fence}
+`;
+  if(body.length>60000)throw Error('Intake metadata exceeds the PR body bound; manual port required');
+  return body;
+}
+export function releaseBody(source,sha) {
+  return `## Summary
+Validated release candidate for ${source.html_url}.
+
+## Validation
+The exact approved source ${sha} passed private development product CI and required checks. Public release checks and exact-head maintainer approval remain required.
+
+## Sources and credits
+Original public submission: ${source.html_url}. Original contributor: ${source.user.login}. Preserve source/license notices and author credit. Full internal contribution records remain private.
+`;
+}
 export function validateSource(repo, pr) {
   if (!PAIRS[repo] || pr.base?.repo?.full_name !== repo || pr.base.ref !== 'main' || pr.state !== 'open') throw Error('Source must be an open main PR in an explicit release/dev pair');
   if (!SHA.test(pr.head?.sha || '') || !SHA.test(pr.base?.sha || '')) throw Error('Source revision must be immutable');
@@ -72,6 +112,7 @@ export async function route(api,repo,number,actor){
   // Re-read approval and head immediately before privileged writes.
   const fresh=await api.request(`repos/${repo}/pulls/${number}`);
   if(fresh.head.sha!==pr.head.sha || fresh.base.sha!==pr.base.sha || fresh.state!=='open' || !ownerApproved(await api.pages(`repos/${repo}/pulls/${number}/reviews`),pr.head.sha))throw Error('Source changed or approval withdrawn during routing');
+  const body=developmentBody(repo,pr,changes);
   const entries=[];
   for(const change of changes){
     if(change.after===null){entries.push({path:change.path,mode:change.mode,type:'blob',sha:null});continue;}
@@ -85,8 +126,7 @@ export async function route(api,repo,number,actor){
   const tree=await api.request(`repos/${dest}/git/trees`,'POST',{base_tree:baseCommit.tree.sha,tree:entries});
   const commit=await api.request(`repos/${dest}/git/commits`,'POST',{message:`Port approved contribution ${repo}#${number}\n\nSource-head: ${pr.head.sha}\nSource-base: ${pr.base.sha}\nOriginal-author: ${pr.user.login}`,tree:tree.sha,parents:[devRef.object.sha]});
   await api.request(`repos/${dest}/git/refs`,'POST',{ref:'refs/heads/'+branch,sha:commit.sha});
-  const metadata={source:repo,pr:number,sha:pr.head.sha,base:pr.base.sha,changes};
-  const created=await api.request(`repos/${dest}/pulls`,'POST',{title:`Port ${repo}#${number}: ${pr.title}`.slice(0,240),head:branch,base:'main',body:`## Summary\nPort an owner-approved external contribution.\n\n## Human contribution\n${OWNER} approved source commit ${pr.head.sha}; original contributor: ${pr.user.login}.\n\n## Agent contribution\nGitHub App copied immutable blobs without executing contributor code. Original disclosure follows.\n\n## External sources\n${pr.html_url} at ${pr.head.sha}. Preserve its license and notices.\n\n## Validation\nProduct CI and maintainer approval are required here before promotion.\n\n<!-- contribution-router-v1 ${JSON.stringify(metadata)} -->\n\n### Original contribution disclosure\n${pr.body||''}`});
+  const created=await api.request(`repos/${dest}/pulls`,'POST',{title:`Port ${repo}#${number}: ${pr.title}`.slice(0,240),head:branch,base:'main',body});
   await api.request(`repos/${repo}/statuses/${pr.head.sha}`,'POST',{state:'pending',context:'Development validation',description:'Owner-approved contribution is awaiting development validation'});
   return {state:'routed',number:created.number};
 }
@@ -113,13 +153,16 @@ export async function promote(api,repo,number,appSlug){
   if(!validationPassed(checkResponse.check_runs,statuses,required))throw Error('Completed product CI and every required check must pass');
   const finalTree=new Map((await api.tree(repo,pr.merge_commit_sha)).map(e=>[e.path,e]));
   const approvedTree=new Map((await api.tree(repo,pr.head.sha)).map(e=>[e.path,e]));
-  for(const c of changes){if((finalTree.get(c.path)?.sha??null)!==c.after || (approvedTree.get(c.path)?.sha??null)!==c.after)throw Error('Development fixes differ from public source; a maintainer must update the public PR before promotion');}
+  for(const c of changes){
+    const expectedMode=c.after===null?null:c.mode;
+    if([finalTree,approvedTree].some(tree=>(tree.get(c.path)?.sha??null)!==c.after || (tree.get(c.path)?.mode??null)!==expectedMode))throw Error('Development fixes differ from public source; a maintainer must update the public PR before promotion');
+  }
   // Export only the original public tree; no private repository content leaves.
   const branch=`validated/${m.pr}-${m.sha.slice(0,16)}`;
   const existing=await api.pages(`repos/${m.source}/pulls?state=all&head=${m.source.split('/')[0]}:${branch}`);
   if(existing.length)return {state:'already-promoted',number:existing[0].number};
   await api.request(`repos/${m.source}/git/refs`,'POST',{ref:'refs/heads/'+branch,sha:m.sha});
-  const release=await api.request(`repos/${m.source}/pulls`,'POST',{title:`Validated contribution #${m.pr}: ${source.title}`.slice(0,240),head:branch,base:'main',body:`## Summary\nValidated release candidate for ${source.html_url}.\n\n## Human contribution\n${OWNER} approved the exact source and development revisions. Original author: ${source.user.login}.\n\n## Agent contribution\nGitHub App prepared this PR after completed development CI. It did not merge or export private source.\n\n## External sources\nOriginal public PR: ${source.html_url}\nExact source: ${m.sha}\n\n## Validation\nDevelopment product CI and required checks passed for the approved revision. Public CI and maintainer approval remain required.\n\n### Original disclosure\n${source.body||''}`});
+  const release=await api.request(`repos/${m.source}/pulls`,'POST',{title:`Validated contribution #${m.pr}: ${source.title}`.slice(0,240),head:branch,base:'main',body:releaseBody(source,m.sha)});
   await api.request(`repos/${m.source}/statuses/${m.sha}`,'POST',{state:'success',context:'Development validation',description:'Exact approved contribution passed development validation'});
   return {state:'release-pr-opened',number:release.number};
 }
