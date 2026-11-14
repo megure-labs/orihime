@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PAIRS,planImport,ownerApproved,validationPassed,validateSource,route,promote,developmentBody,releaseBody} from './contribution-router.mjs';
+const EXPECTED_PAIRS = Object.freeze({"megure-labs/orihime":"megure-labs/orihime-dev"});
 const PUBLIC=Object.keys(PAIRS)[0];
 const old={path:'src/example.rs',sha:'a'.repeat(40),mode:'100644',type:'blob',size:10};
 const next={...old,sha:'b'.repeat(40)};
@@ -51,8 +52,8 @@ test('unauthorized routing performs no API call or write',async()=>{
 
 
 test('repository pairs are explicit rather than inferred from the environment',()=>{
- assert.deepEqual({...PAIRS},{'megure-labs/orihime':'megure-labs/orihime-dev','orikata-bio/hikoboshi':'orikata-bio/hikoboshi-dev'});
- assert.equal(PAIRS['megure-labs/hikoboshi'],undefined);assert.equal(PAIRS['orikata-bio/orihime'],undefined);
+ assert.deepEqual({...PAIRS},{...EXPECTED_PAIRS});
+ assert.equal(PAIRS['unpaired/source'],undefined);
 });
 test('private intake requires actual agent attribution and quotes untrusted submission text',()=>{
  const pr={number:1,head:{sha:next.sha},base:{sha:old.sha},user:{login:'contributor'},html_url:'https://github.com/example/public/pull/1',body:'## Agent contribution\nInvented facts\n```'};

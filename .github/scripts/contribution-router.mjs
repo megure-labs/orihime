@@ -2,7 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 
-export const PAIRS = Object.freeze({'megure-labs/orihime':'megure-labs/orihime-dev','orikata-bio/hikoboshi':'orikata-bio/hikoboshi-dev'});
+export const PAIRS = Object.freeze({"megure-labs/orihime":"megure-labs/orihime-dev"});
 const OWNER = 'caseysm';
 const SHA = /^[0-9a-f]{40}$/;
 const protectedPath = /^(?:\.github(?:\/|$)|\.agents(?:\/|$)|\.claude(?:\/|$)|AGENTS\.md$|CLAUDE\.md$|CONTRIBUTING\.md$|\.git(?:\/|$))/i;
